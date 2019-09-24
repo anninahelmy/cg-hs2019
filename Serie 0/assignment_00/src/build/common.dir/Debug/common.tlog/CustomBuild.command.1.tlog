@@ -1,0 +1,10 @@
+^C:\USERS\ANN_K\DOCUMENTS\STUDIUM BACHELOR\INFORMATIK\SEMESTER 5\COMPUTERGRAFIK\CG-HS2019\SERIE 0\ASSIGNMENT_00\SRC\CMAKELISTS.TXT
+setlocal
+C:\Users\ann_k\Downloads\Programme\cmake-3.15.3-win64-x64\cmake-3.15.3-win64-x64\bin\cmake.exe "-SC:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src" "-BC:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src/build" --check-stamp-file "C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

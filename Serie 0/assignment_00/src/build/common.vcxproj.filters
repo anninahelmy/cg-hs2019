@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\ann_k\Documents\Studium Bachelor\Informatik\Semester 5\Computergrafik\cg-hs2019\Serie 0\assignment_00\src\Cylinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ann_k\Documents\Studium Bachelor\Informatik\Semester 5\Computergrafik\cg-hs2019\Serie 0\assignment_00\src\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ann_k\Documents\Studium Bachelor\Informatik\Semester 5\Computergrafik\cg-hs2019\Serie 0\assignment_00\src\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ann_k\Documents\Studium Bachelor\Informatik\Semester 5\Computergrafik\cg-hs2019\Serie 0\assignment_00\src\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ann_k\Documents\Studium Bachelor\Informatik\Semester 5\Computergrafik\cg-hs2019\Serie 0\assignment_00\src\Sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ann_k\Documents\Studium Bachelor\Informatik\Semester 5\Computergrafik\cg-hs2019\Serie 0\assignment_00\src\vec3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\ann_k\Documents\Studium Bachelor\Informatik\Semester 5\Computergrafik\cg-hs2019\Serie 0\assignment_00\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{C51B8062-F137-34D4-82E7-4C6F08964836}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
