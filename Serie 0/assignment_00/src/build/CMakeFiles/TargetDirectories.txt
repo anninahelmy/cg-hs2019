@@ -1,5 +1,0 @@
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src/build/CMakeFiles/raytrace.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src/build/CMakeFiles/common.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src/build/CMakeFiles/debug_aabb.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/src/build/CMakeFiles/ZERO_CHECK.dir

@@ -3,9 +3,13 @@
     "",
     "\\Serie 0",
     "\\Serie 0\\assignment_00",
-    "\\Serie 0\\assignment_00\\scenes",
-    "\\Serie 0\\assignment_00\\scenes\\solid_color"
+    "\\Serie 0\\scenes",
+    "\\Serie 0\\scenes\\spheres",
+    "\\Serie 0\\src",
+    "\\Serie 1\\assignment_01",
+    "\\Serie 1\\assignment_01\\assignment_01",
+    "\\Serie 1\\assignment_01\\assignment_01\\src"
   ],
-  "SelectedNode": "\\Serie 0\\assignment_00\\scenes\\solid_color\\solid_color.sce",
+  "SelectedNode": "\\Serie 0\\src\\Plane.cpp",
   "PreviewInSolutionExplorer": false
 }

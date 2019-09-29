@@ -1,7 +1,0 @@
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/out/build/x64-Debug/src/CMakeFiles/raytrace.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/out/build/x64-Debug/src/CMakeFiles/common.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/out/build/x64-Debug/src/CMakeFiles/debug_aabb.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/out/build/x64-Debug/src/CMakeFiles/edit_cache.dir
-C:/Users/ann_k/Documents/Studium Bachelor/Informatik/Semester 5/Computergrafik/cg-hs2019/Serie 0/assignment_00/out/build/x64-Debug/src/CMakeFiles/rebuild_cache.dir
