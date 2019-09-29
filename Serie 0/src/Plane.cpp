@@ -43,8 +43,8 @@ intersect(const Ray& _ray,
 	 * - return whether there is an intersection in front of the viewer (t > 0)
 	*/
 
-	const vec3& dir = _ray.direction;
-	const vec3   oc = _ray.origin - center;
+	const vec3 dir = _ray.direction;
+	const vec3   oc = center - _ray.origin;
 	
 	const double nd_dotProduct = dot(normal, dir);
 
@@ -53,7 +53,7 @@ intersect(const Ray& _ray,
 	// or ray is in plane (no visible plane (1 pixel is not visible)). Else return intersection.
 	if (nd_dotProduct == 0) _intersection_t = NO_INTERSECTION;
 	else {
-		_intersection_t = (dot(normal, center) - dot(normal, oc)) / nd_dotProduct;
+		_intersection_t = dot(normal, oc) / nd_dotProduct;
 		if (_intersection_t < 0) _intersection_t = NO_INTERSECTION;
 	}
 
