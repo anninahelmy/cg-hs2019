@@ -19,7 +19,8 @@
 //== IMPLEMENTATION =========================================================
 
 bool
-Cylinder::
+
+::
 intersect(const Ray&  _ray,
           vec3&       _intersection_point,
           vec3&       _intersection_normal,
@@ -35,7 +36,7 @@ intersect(const Ray&  _ray,
 
 	_intersection_t = NO_INTERSECTION;
 
-	// Find the closest valid solution (in front of the viewer) and check if intersection os with finite cylinder
+	// Find the closest valid solution (in front of the viewer) and check if intersection is with finite cylinder
 	for (size_t i = 0; i < nsol; ++i) {
 		if (t[i] <= 0) continue;
 		double dist_cx = dot(t[i] * dir + oc, t[i] * dir + oc);
@@ -45,8 +46,19 @@ intersect(const Ray&  _ray,
 
 	if (_intersection_t == NO_INTERSECTION) return false;
 
-	// compute intersection data
+	// Compute intersection values
 	_intersection_point = _ray(_intersection_t);
+	vec3 cx = _intersection_point - center;
+	_intersection_normal = ((dot(axis, cx) * axis) - cx) / radius;
+
+
+	// Choose the orientation of the normal to be opposite to the ray's orientation if the ray intersects the surface inside.
+	if (dot(_intersection_normal, dir) > 0)
+		_intersection_normal *= -1.0;
+
+
+
+
 	
 
 	return true;
