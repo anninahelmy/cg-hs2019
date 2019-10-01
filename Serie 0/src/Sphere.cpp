@@ -52,9 +52,7 @@ intersect(const Ray&  _ray,
     if (_intersection_t == NO_INTERSECTION) return false;
 
     _intersection_point  = _ray(_intersection_t);
-    
-	
-
+	_intersection_normal = (_intersection_point - center) / radius;
     return true;
 }
 

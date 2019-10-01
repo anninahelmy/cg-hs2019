@@ -24,20 +24,20 @@
 /// This class stores all material parameters.
 struct Material
 {
-    /// ambient color
-    vec3   ambient;
+	/// ambient color
+	vec3   ambient;
 
-    /// diffuse color
-    vec3   diffuse;
+	/// diffuse color
+	vec3   diffuse;
 
-    /// specular color
-    vec3   specular;
+	/// specular color
+	vec3   specular;
 
-    /// shininess factor
-    double shininess;
+	/// shininess factor
+	double shininess;
 
-    /// reflectivity factor (1=perfect mirror, 0=no reflection).
-    double mirror;
+	/// reflectivity factor (1=perfect mirror, 0=no reflection).
+	double mirror;
 };
 
 
@@ -47,8 +47,8 @@ struct Material
 /// read material from stream
 inline std::istream& operator>>(std::istream& is, Material& m)
 {
-    is >> m.ambient >> m.diffuse >> m.specular >> m.shininess >> m.mirror;
-    return is;
+	is >> m.ambient >> m.diffuse >> m.specular >> m.shininess >> m.mirror;
+	return is;
 }
 
 

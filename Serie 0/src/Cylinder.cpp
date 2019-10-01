@@ -20,7 +20,7 @@
 
 bool
 
-::
+Cylinder::
 intersect(const Ray&  _ray,
           vec3&       _intersection_point,
           vec3&       _intersection_normal,
