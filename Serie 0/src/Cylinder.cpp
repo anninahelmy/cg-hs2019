@@ -51,7 +51,7 @@ intersect(const Ray&  _ray,
 	_intersection_normal = ((dot(axis, cx) * axis) - cx) / radius;
 	
 	// Choose the orientation of the normal to be opposite to the ray's orientation if the ray intersects the surface inside.
-	if (dot(_intersection_normal, dir) > 0)
+	if (dot(_intersection_normal, dir) < 0)
 		_intersection_normal *= -1.0;
 
 	return true;    
