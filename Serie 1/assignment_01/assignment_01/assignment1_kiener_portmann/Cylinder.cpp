@@ -47,11 +47,11 @@ intersect(const Ray&  _ray,
 
 	// Compute intersection values
 	_intersection_point = _ray(_intersection_t);
-	vec3 cx = _intersection_point - center;
+	vec3 cx = center - _intersection_point;
 	_intersection_normal = ((dot(axis, cx) * axis) - cx) / radius;
 	
 	// Choose the orientation of the normal to be opposite to the ray's orientation if the ray intersects the surface inside.
-	if (dot(_intersection_normal, dir) < 0)
+	if (dot(_intersection_normal, dir) > 0)
 		_intersection_normal *= -1.0;
 
 	return true;    
