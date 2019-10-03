@@ -30,8 +30,8 @@ intersect(const Ray&  _ray,
 	const vec3   oc = _ray.origin - center;
 
 	std::array<double, 2> t;
-	size_t nsol = solveQuadratic(dot(dir, dir) - (dot(dir, axis) * dot(dir, axis)),
-		2 * (dot(dir, oc) - (dot(dir, axis) * dot(oc, axis)) ,
+	size_t nsol = solveQuadratic(dot(dir, dir) - dot(dir, axis) * dot(dir, axis),
+		2 * (dot(dir, oc) - (dot(dir, axis) * dot(oc, axis))) ,
 		dot(oc, oc) - (dot(oc, axis) * dot(oc, axis)) - radius * radius, t);
 
 	_intersection_t = NO_INTERSECTION;
@@ -51,7 +51,7 @@ intersect(const Ray&  _ray,
 	_intersection_normal = ((dot(axis, cx) * axis) - cx) / radius;
 	
 	// Choose the orientation of the normal to be opposite to the ray's orientation if the ray intersects the surface inside.
-	if (dot(_intersection_normal, dir) > 0)
+	if (dot(_intersection_normal, dir) < 0)
 		_intersection_normal *= -1.0;
 
 	return true;    
