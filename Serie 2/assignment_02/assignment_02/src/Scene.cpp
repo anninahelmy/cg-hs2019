@@ -145,7 +145,8 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 	vec3 ambient = _material.ambient * this->ambience;
 	vec3 diffuse = vec3(0, 0, 0);
 	for (Light light : lights) {
-		diffuse += light.color * dot(_normal, normalize((light.position - _point)));
+		double nl = dot(normalize(_normal), normalize((light.position - _point)));
+		if(nl > 0) diffuse += light.color * nl;
 	}
 	diffuse *= _material.diffuse;
 
