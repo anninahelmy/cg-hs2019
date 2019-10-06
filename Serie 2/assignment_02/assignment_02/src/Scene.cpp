@@ -132,16 +132,15 @@ bool Scene::intersect(const Ray& _ray, Object_ptr& _object, vec3& _point, vec3& 
 vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view, const Material& _material)
 {
 
-	/** \todo
-	* Compute the Phong lighting:
-	* - start with global ambient contribution
-	* - for each light source (stored in vector `lights`) add diffuse and specular contribution
+	/* TODO: 
 	* - only add diffuse and specular light if object is not in shadow
 	*
 	* You can look at the classes `Light` and `Material` to check their attributes. Feel free to use
 	* the existing vector functions in vec3.h e.g. mirror, reflect, norm, dot, normalize
 	*/
-	
+
+	//Phong lightning
+
 	//ambient contribution
 	vec3 ambient = _material.ambient * this->ambience;
 
@@ -150,39 +149,32 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 	vec3 specular = vec3(0, 0, 0);
 
 	//variables for intersection
-	Object_ptr  o;
-	vec3        p, n;
+	Object_ptr  object;
+	vec3        point, normal;
 	double      t;
 
-	//compute intensity of light source for diffuse and specular contribution
+	//compute intensity of light source for diffuse and specular contribution (with shadow)
 	for (Light light : lights) {
+		// Compute the shadow ray, the origin is the intersection point but since
+		// it's needed to send the shadow ray from a displaced intersection point
+		// to the light source, add a little bit (0.000001) of the direction vector
 
-
-	/**
-	* Compute the shadow ray, the origin is the intersection point but since 
-	* it's needed to send the shadow ray from a displaced intersection point
-	* to the light source, add a little bit (0.01) of the direction vector
-	*/
 		Ray shadow;
 
 		//direction of the shadow is from the intersection point to the light source
 		shadow.direction = normalize(light.position - _point);
-		shadow.origin = _point + 0.01 * shadow.direction;
+		shadow.origin = _point + 0.000001 * shadow.direction;
 
 		//boolean to figure out if an intersection happens (shadow hits object and only ambient contribution is visible)
-		bool intersection = intersect(shadow, o, p, n, t);
+		bool intersection = intersect(shadow, object, point, normal, t);
 
 		if (!intersection && t < distance(light.position, _point)) {
 
-				double nl = dot(normalize(_normal), normalize((light.position - _point)));
-					if (nl > 0) diffuse += light.color * nl;
+			double nl = dot(normalize(_normal), normalize((light.position - _point)));
+			if (nl > 0) diffuse += light.color * nl * _material.diffuse;
 
-					double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
-					if (nl > 0 && rv > 0) specular += light.color * _material.specular;
-
-					diffuse *= _material.diffuse;
-					specular *= pow(rv, _material.shininess);
-
+			double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
+			if (nl > 0 && rv > 0) specular += light.color * _material.specular * pow(rv, _material.shininess);
 		}
 	}
 
