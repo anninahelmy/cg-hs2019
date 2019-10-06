@@ -149,20 +149,20 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 	vec3 diffuse = vec3(0, 0, 0);
 	vec3 specular = vec3(0, 0, 0);
 
-	//compute intensity of light source
+	//compute intensity of light source for diffuse and specular contribution
+
 	for (Light light : lights) {
 		double nl = dot(normalize(_normal), normalize((light.position - _point)));
-		if(nl > 0) diffuse += light.color * nl;
+		if (nl > 0) diffuse += light.color * nl;
+
+		double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
+		if (nl > 0 && rv > 0) specular += light.color * _material.specular;
+
+		diffuse *= _material.diffuse;
+		specular *= pow(rv, _material.shininess);
 	}
 
-	diffuse *= _material.diffuse;
 
-	//compute specular contribution
-
-	for (Light light : lights) {
-		double rv = dot(mirror(normalize(light.position - _point), normalize(_normal)), _view);
-			if (rv > 0) specular += light.color * _material.specular * pow(rv, _material.shininess);
-	}
 	vec3 color = ambient + diffuse + specular;
 
 	//OLD:  visualize the normal as a RGB color for now.
