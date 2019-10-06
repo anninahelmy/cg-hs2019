@@ -149,32 +149,39 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 	vec3 diffuse = vec3(0, 0, 0);
 	vec3 specular = vec3(0, 0, 0);
 
-	// Declare some variables for the intersect-method
+	//variables for intersection
 	Object_ptr  o;
 	vec3        p, n;
 	double      t;
 
-	Ray shadow;
-	shadow.origin = _point + 0.01 * _normal;
-
-
 	//compute intensity of light source for diffuse and specular contribution
 	for (Light light : lights) {
 
-		shadow.direction = normalize(light.position - _point);
 
+	/**
+	* Compute the shadow ray, the origin is the intersection point but since 
+	* it's needed to send the shadow ray from a displaced intersection point
+	* to the light source, add a little bit (0.01) of the direction vector
+	*/
+		Ray shadow;
+
+		//direction of the shadow is from the intersection point to the light source
+		shadow.direction = normalize(light.position - _point);
+		shadow.origin = _point + 0.01 * shadow.direction;
+
+		//boolean to figure out if an intersection happens (shadow hits object and only ambient contribution is visible)
 		bool intersection = intersect(shadow, o, p, n, t);
 
-		if (!intersection) {
+		if (!intersection && t < distance(light.position, _point)) {
 
-			double nl = dot(normalize(_normal), normalize((light.position - _point)));
-			if (nl > 0) diffuse += light.color * nl;
+				double nl = dot(normalize(_normal), normalize((light.position - _point)));
+					if (nl > 0) diffuse += light.color * nl;
 
-			double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
-			if (nl > 0 && rv > 0) specular += light.color * _material.specular;
+					double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
+					if (nl > 0 && rv > 0) specular += light.color * _material.specular;
 
-			diffuse *= _material.diffuse;
-			specular *= pow(rv, _material.shininess);
+					diffuse *= _material.diffuse;
+					specular *= pow(rv, _material.shininess);
 
 		}
 	}
