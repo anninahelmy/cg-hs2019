@@ -142,15 +142,28 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 	* the existing vector functions in vec3.h e.g. mirror, reflect, norm, dot, normalize
 	*/
 	
+	//ambient contribution
 	vec3 ambient = _material.ambient * this->ambience;
+
+	//diffuse contribution
 	vec3 diffuse = vec3(0, 0, 0);
+	vec3 specular = vec3(0, 0, 0);
+
+	//compute intensity of light source
 	for (Light light : lights) {
 		double nl = dot(normalize(_normal), normalize((light.position - _point)));
 		if(nl > 0) diffuse += light.color * nl;
 	}
+
 	diffuse *= _material.diffuse;
 
-	vec3 color = ambient + diffuse;
+	//compute specular contribution
+
+	for (Light light : lights) {
+		double rv = dot(mirror(normalize(light.position - _point), normalize(_normal)), _view);
+			if (rv > 0) specular += light.color * _material.specular * pow(rv, _material.shininess);
+	}
+	vec3 color = ambient + diffuse + specular;
 
 	//OLD:  visualize the normal as a RGB color for now.
 	//vec3 color = (_normal + vec3(1)) / 2.0;

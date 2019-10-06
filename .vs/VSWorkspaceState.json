@@ -1,16 +1,17 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Serie 0",
-    "\\Serie 0\\assignment_00",
     "\\Serie 0\\scenes",
     "\\Serie 0\\scenes\\spheres",
     "\\Serie 0\\src",
-    "\\Serie 1",
     "\\Serie 1\\assignment_01",
     "\\Serie 1\\assignment_01\\assignment_01",
-    "\\Serie 1\\assignment_01\\assignment_01\\src"
+    "\\Serie 1\\assignment_01\\assignment_01\\src",
+    "\\Serie 2",
+    "\\Serie 2\\assignment_02",
+    "\\Serie 2\\assignment_02\\assignment_02",
+    "\\Serie 2\\assignment_02\\assignment_02\\src"
   ],
-  "SelectedNode": "\\Serie 0\\src\\Cylinder.cpp",
+  "SelectedNode": "\\Serie 2\\assignment_02\\assignment_02\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }
