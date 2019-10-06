@@ -145,21 +145,38 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 	//ambient contribution
 	vec3 ambient = _material.ambient * this->ambience;
 
-	//diffuse contribution
+	//diffuse and specular contribution
 	vec3 diffuse = vec3(0, 0, 0);
 	vec3 specular = vec3(0, 0, 0);
 
+	// Declare some variables for the intersect-method
+	Object_ptr  o;
+	vec3        p, n;
+	double      t;
+
+	Ray shadow;
+	shadow.origin = _point + 0.01 * _normal;
+
+
 	//compute intensity of light source for diffuse and specular contribution
-
 	for (Light light : lights) {
-		double nl = dot(normalize(_normal), normalize((light.position - _point)));
-		if (nl > 0) diffuse += light.color * nl;
 
-		double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
-		if (nl > 0 && rv > 0) specular += light.color * _material.specular;
+		shadow.direction = normalize(light.position - _point);
 
-		diffuse *= _material.diffuse;
-		specular *= pow(rv, _material.shininess);
+		bool intersection = intersect(shadow, o, p, n, t);
+
+		if (!intersection) {
+
+			double nl = dot(normalize(_normal), normalize((light.position - _point)));
+			if (nl > 0) diffuse += light.color * nl;
+
+			double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
+			if (nl > 0 && rv > 0) specular += light.color * _material.specular;
+
+			diffuse *= _material.diffuse;
+			specular *= pow(rv, _material.shininess);
+
+		}
 	}
 
 
