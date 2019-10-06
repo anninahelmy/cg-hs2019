@@ -100,8 +100,16 @@ vec3 Scene::trace(const Ray& _ray, int _depth)
 	 * the color computed by local Phong lighting (use `object->material.mirror` as weight)
 	 * - check whether your recursive algorithm reflects the ray `max_depth` times
 	 */
+	
+	if (object->material.mirror == 0) return color;
 
-	return color;
+	vec3 reflection = reflect(_ray.direction, normal);
+	Ray reflection_ray;
+	reflection_ray.direction = reflection;
+	reflection_ray.origin = point + (0.0001 * normal);
+	vec3 reflected_color = trace(reflection_ray, _depth + 1);
+	
+	return (1 - object->material.mirror) * color + object->material.mirror * reflected_color;
 }
 
 //-----------------------------------------------------------------------------
@@ -129,18 +137,9 @@ bool Scene::intersect(const Ray& _ray, Object_ptr& _object, vec3& _point, vec3& 
 	return (tmin != Object::NO_INTERSECTION);
 }
 
+//Phong lightning
 vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view, const Material& _material)
 {
-
-	/* TODO: 
-	* - only add diffuse and specular light if object is not in shadow
-	*
-	* You can look at the classes `Light` and `Material` to check their attributes. Feel free to use
-	* the existing vector functions in vec3.h e.g. mirror, reflect, norm, dot, normalize
-	*/
-
-	//Phong lightning
-
 	//ambient contribution
 	vec3 ambient = _material.ambient * this->ambience;
 
@@ -169,7 +168,6 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 		bool intersection = intersect(shadow, object, point, normal, t);
 
 		if (!intersection && t < distance(light.position, _point)) {
-
 			double nl = dot(normalize(_normal), normalize((light.position - _point)));
 			if (nl > 0) diffuse += light.color * nl * _material.diffuse;
 
