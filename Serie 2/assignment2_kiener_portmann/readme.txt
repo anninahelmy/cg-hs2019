@@ -2,15 +2,17 @@ Assignment 2
 
 Ambient contribution:
 for the ambient contribution we followed exactly the description from the lecture: We multiplied the ambient-material factor with the ambient light.
-This was quite easy to achieve.
+This was quite easy to achieve. (screenshot: spheres.diffuse)
 
 Diffuse contribution: 
 We first set the diffuse color part to zero and then add with a for loop for every lightsource (stored in the lights array) the diffuse component.
+(screenshot: spheres.diffuse)
 
 Specular contribution:
 For the specular contribution we did the same as for the ambient and diffuse contribution and followed the information on the slides.
 The biggest challenge here was to describe the r-vector, but we figured it out eventually since this is also provided on the slides. 
-With googling we also figured out how to implement the exponent 'shininess' with the pow-function. 
+With googling we also figured out how to implement the exponent 'shininess' with the pow-function. (Sadly, we forgot to take a screenshot
+of this step)
 
 
 Shadows:
@@ -19,7 +21,7 @@ diffuse and specular contribution so that there's only the ambient contribution.
 we added a little bit of the direction-vector. Then we checked if an intersection occurred (if an object is blocking the light source) and if we should add up the
 diffuse and specular contribution. However, the number we added is just a wild guess and it seems as if it has more of an impact than anticipated.
 The picture that resulted does not quite seem correct, but it is hard to tell, since we do have some shadows but they're not exactly like in the picture
-of the expected results. The reason therefore was that we had a multiplication with the materialfactor at the wrong place in the loop so we multiplied to much. 
+of the expected results (screenshot: spheres.shadows.notfinished). The reason therefore was that we had a multiplication with the materialfactor at the wrong place in the loop so we multiplied to much. 
 That resulted in the second light being cancelled out. So there was only one light to produce the shadow, what is exactly what we have seen in the wrong picture. 
 
 
