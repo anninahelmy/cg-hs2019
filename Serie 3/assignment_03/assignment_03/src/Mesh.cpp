@@ -151,6 +151,14 @@ void Mesh::compute_normals()
         v.normal = vec3(0,0,0);
     }
 
+	for (int i = 0; i < vertices_.size(); i++) 
+	{
+		for (Triangle& t : triangles_)
+		{
+			if (t.i0 == i || t.i1 == i || t.i2 == i) vertices_[i].normal = t.normal;
+		}
+	}
+
     /** \todo
      * In some scenes (e.g the office scene) some objects should be flat
      * shaded (e.g. the desk) while other objects should be Phong shaded to appear
