@@ -113,6 +113,7 @@ private:
     vec3 bb_max_;
 };
 
+static double calculate_det(vec3 _a, vec3 _b, vec3 _c);
 
 //=============================================================================
 #endif // MESH_H defined

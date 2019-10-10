@@ -288,24 +288,25 @@ intersect_triangle(const Triangle&  _triangle,
 	y_det = calculate_det(p0 - p2, origin - p2, -dir);
 	z_det = calculate_det(p0 - p2, origin - p2, origin - p2);
 
-	//If main_det = 0 then we have no intersection or infinitely many intersections (ray lies in triangle plane). In both cases we see nothing.
+	// If main_det = 0 then we have no intersection or infinitely many intersections (ray lies in triangle plane). In both cases we see nothing.
 	if (main_det == 0) return false;
-	
+
 	alpha = x_det / main_det;
 	beta = y_det / main_det;
 	gamma = 1 - alpha - beta;
 	_intersection_t = z_det / main_det;
 	_intersection_point = _ray(_intersection_t);
 
+	// TODO: Always triangle normal case. Next consider other case too.
+	_intersection_normal = _triangle.normal;
+
 	return true;
 }
 
-double calculate_det(vec3 _a, vec3 _b, vec3 _c)
-{	
-	double det;
-	det = _a[0] * _b[1] * _c[2] + _a[1] * _b[2] * _c[0] + _a[2] * _b[0] * _c[1]
+static double calculate_det(vec3 _a, vec3 _b, vec3 _c)
+{
+	return _a[0] * _b[1] * _c[2] + _a[1] * _b[2] * _c[0] + _a[2] * _b[0] * _c[1]
 		- (_a[2] * _b[1] * _c[0] + _a[0] * _b[2] * _c[1] + _a[1] * _b[0] * _c[2]);
-	return det;
 }
 
 
