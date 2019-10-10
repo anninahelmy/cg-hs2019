@@ -275,7 +275,38 @@ intersect_triangle(const Triangle&  _triangle,
     * Refer to [Cramer's Rule](https://en.wikipedia.org/wiki/Cramer%27s_rule) to easily solve it.
      */
 
-    return false;
+	//intersect _ray with _triangle by solving the equation o + dt = alpha*A + beta*B + gamma*C.
+	//By subset gamma with (1-alpha-beta) we get o - c = alpha * (a - c) + beta * ( b - c ) - t * d.
+	double main_det;
+	double x_det;
+	double y_det;
+	double z_det;
+
+	vec3 dir = _ray.direction;
+	vec3 origin = _ray.origin;
+
+	main_det = calculate_det(p0 - p2, p1 - p2, -dir);
+	x_det = calculate_det(origin - p2, p1 - p2, -dir);
+	y_det = calculate_det(p0 - p2, origin - p2, -dir);
+	z_det = calculate_det(p0 - p2, origin - p2, origin - p2);
+
+	vec3 _intersection_point;
+
+	if (main_det == 0) return false;
+	
+	_intersection_point[0] = x_det / main_det;
+	_intersection_point[1] = y_det / main_det;
+	_intersection_point[2] = z_det / main_det;
+
+	return true;
+}
+
+double calculate_det(vec3 _a, vec3 _b, vec3 _c)
+{	
+	double det;
+	det = _a[0] * _b[1] * _c[2] + _a[1] * _b[2] * _c[0] + _a[2] * _b[0] * _c[1]
+		- (_a[2] * _b[1] * _c[0] + _a[0] * _b[2] * _c[1] + _a[1] * _b[0] * _c[2]);
+	return det;
 }
 
 
