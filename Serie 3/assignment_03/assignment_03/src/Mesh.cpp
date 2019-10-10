@@ -277,10 +277,9 @@ intersect_triangle(const Triangle&  _triangle,
 
 	//intersect _ray with _triangle by solving the equation o + dt = alpha*A + beta*B + gamma*C.
 	//By subset gamma with (1-alpha-beta) we get o - c = alpha * (a - c) + beta * ( b - c ) - t * d.
-	double main_det;
-	double x_det;
-	double y_det;
-	double z_det;
+	double main_det, x_det, y_det, z_det;
+	double alpha, beta, gamma;
+
 
 	vec3 dir = _ray.direction;
 	vec3 origin = _ray.origin;
@@ -292,11 +291,14 @@ intersect_triangle(const Triangle&  _triangle,
 
 	vec3 _intersection_point;
 
+	//If main_det = 0 then we have no intersection or infinitely many intersections (ray lies in triangle plane). In both cases we see nothing.
 	if (main_det == 0) return false;
 	
-	_intersection_point[0] = x_det / main_det;
-	_intersection_point[1] = y_det / main_det;
-	_intersection_point[2] = z_det / main_det;
+	alpha = x_det / main_det;
+	beta = y_det / main_det;
+	gamma = 1 - alpha - beta;
+	_intersection_t = z_det / main_det;
+	_intersection_point = _ray(_intersection_t);
 
 	return true;
 }
