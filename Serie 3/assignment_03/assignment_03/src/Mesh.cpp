@@ -190,19 +190,9 @@ void Mesh::compute_bounding_box()
 //-----------------------------------------------------------------------------
 
 
+// Intersect the ray `_ray` with the axis-aligned bounding box of the mesh. Return whether the ray intersects the bounding box.
 bool Mesh::intersect_bounding_box(const Ray& _ray) const
 {
-
-    /** \todo
-    * Intersect the ray `_ray` with the axis-aligned bounding box of the mesh.
-    * Note that the minimum and maximum point of the bounding box are stored
-    * in the member variables `bb_min_` and `bb_max_`. Return whether the ray
-    * intersects the bounding box.
-    * This function is ued in `Mesh::intersect()` to avoid the intersection test
-    * with all triangles of every mesh in the scene. The bounding boxes are computed
-    * in `Mesh::compute_bounding_box()`.
-    */
-
 	for (int i = 0; i < 3; i++)
 	{
 		if (intersect_box_side(_ray, i, bb_min_[i]) || intersect_box_side(_ray, i, bb_max_[i])) return true;
@@ -305,7 +295,7 @@ intersect_triangle(const Triangle&  _triangle,
 	main_det = calculate_det(p0 - p2, p1 - p2, -dir);
 	x_det = calculate_det(origin - p2, p1 - p2, -dir);
 	y_det = calculate_det(p0 - p2, origin - p2, -dir);
-	z_det = calculate_det(p0 - p2, origin - p2, origin - p2);
+	z_det = calculate_det(p0 - p2, p1 - p2, origin - p2);
 
 	// If main_det = 0 then we have no intersection or infinitely many intersections (ray lies in triangle plane). In both cases we see nothing.
 	if (main_det == 0) return false;
@@ -313,6 +303,10 @@ intersect_triangle(const Triangle&  _triangle,
 	alpha = x_det / main_det;
 	beta = y_det / main_det;
 	gamma = 1 - alpha - beta;
+
+	// Check if alpha, beta, gamma > 0, to get an intersection within the triangle.
+	if (alpha < 0 || beta < 0 || gamma < 0) return false;
+
 	_intersection_t = z_det / main_det;
 	_intersection_point = _ray(_intersection_t);
 
