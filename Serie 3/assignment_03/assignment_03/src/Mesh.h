@@ -83,6 +83,8 @@ public:
     /// Does \c _ray intersect the bounding box of the mesh?
     bool intersect_bounding_box(const Ray& _ray) const;
 
+	bool intersect_box_side(const Ray& _ray, int axis, double plane) const;
+
     /// Intersect a triangle with a ray. Return whether there is an intersection.
     /// If there is an intersection, store intersection data.
     /// This function overrides Object::intersect().

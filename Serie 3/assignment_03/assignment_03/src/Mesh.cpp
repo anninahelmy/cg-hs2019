@@ -1,3 +1,4 @@
+#include "Mesh.h"
 //=============================================================================
 //
 //   Exercise code for the lecture
@@ -202,9 +203,27 @@ bool Mesh::intersect_bounding_box(const Ray& _ray) const
     * in `Mesh::compute_bounding_box()`.
     */
 
-    return true;
+	for (int i = 0; i < 3; i++)
+	{
+		if (intersect_box_side(_ray, i, bb_min_[i]) || intersect_box_side(_ray, i, bb_max_[i])) return true;
+	}
+
+    return false;
 }
 
+bool Mesh::intersect_box_side(const Ray& _ray, int axis, double plane) const
+{
+	double t = (plane - _ray.origin[axis]) / _ray.direction[axis];
+	vec3 intersection_point = _ray(t);
+	
+	// Check for all axis but given one if plane intersection is within rectangle.
+	for (int i = (axis + 1) % 3; i != axis; i = (i + 1) % 3)
+	{
+		if (intersection_point[i] > bb_max_[i] || intersection_point[i] < bb_min_[i]) return false;
+	}
+
+	return true;
+}
 
 //-----------------------------------------------------------------------------
 
