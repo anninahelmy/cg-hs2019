@@ -303,11 +303,11 @@ intersect_triangle(const Triangle&  _triangle,
 	alpha = x_det / main_det;
 	beta = y_det / main_det;
 	gamma = 1 - alpha - beta;
+	_intersection_t = z_det / main_det;
 
 	// Check if alpha, beta, gamma > 0, to get an intersection within the triangle.
-	if (alpha < 0 || beta < 0 || gamma < 0) return false;
+	if (alpha < 0 || beta < 0 || gamma < 0 || _intersection_t < 0) return false;
 
-	_intersection_t = z_det / main_det;
 	_intersection_point = _ray(_intersection_t);
 
 	// TODO: Always triangle normal case. Next consider other case too.
