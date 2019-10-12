@@ -161,6 +161,7 @@ void Mesh::compute_normals()
 			const vec3& p2 = vertices_[t.i2].position;
 
 			double w0, w1, w2;
+			// -Weigh the normals by their triangles' angles.
 			angleWeights(p0, p1, p2, w0, w1, w2);
 
 			//adding the normals all together
@@ -327,8 +328,21 @@ intersect_triangle(const Triangle&  _triangle,
 
 	_intersection_point = _ray(_intersection_t);
 
-	// TODO: Always triangle normal case. Next consider other case too.
-	_intersection_normal = _triangle.normal;
+	// if objects are flat shaded the intersection normal is the normal of the intersected triangle
+	if (draw_mode_ == FLAT) {
+		_intersection_normal = _triangle.normal;
+	}
+
+	//if objects are phong shaded we need to use the interpolate vertex normals (with formula n(x) = alpha*n(p0)+beta*n(p1)+gamma*n(p2)
+	else
+	{
+		const vec3& v0 = vertices_[_triangle.i0].normal;
+		const vec3& v1 = vertices_[_triangle.i1].normal;
+		const vec3& v2 = vertices_[_triangle.i2].normal;
+
+		const vec3& nx = alpha * v0 + beta * v1 + gamma * v2;
+		_intersection_normal = normalize(nx);
+	}
 
 	return true;
 }
