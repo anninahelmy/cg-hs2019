@@ -21,7 +21,8 @@ We did this for each vertex on the triangle (for-loop). Then we normalized all c
 For the phong shaded objects we just implemented the given formula with the vertex normals of vertices A, B and C (or p0, p1 and p2) and again, normalized the vectors
 after interpolating them. Draw_mode_ decides whether the object needs to be flat shaded or phong shaded. 
 
-4. After havin done this everything looked OK but the toon_faces. We had some weird black strips. Debugging this was quite hard. We changed the scene.sce file to better understand the error.
+4. After havin done this everything looked OK but the toon_faces. We had some weird black strips. Debugging this was quite hard. 
+We changed the scene.sce file many times to better understand the error (-> toon_faces_debug).
 The stripes had exactly the color of the background. 
 After playing around with the scene.sce we got the impression that something's wrong with the shadow (see toon_faces_debug_[...]). 
 So we changed the scene.cpp file in a way that we trace the shadow to see where it's coming from (which color it has)(toon_faces_debug_traced-shadows).
