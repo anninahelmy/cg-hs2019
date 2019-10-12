@@ -152,13 +152,30 @@ void Mesh::compute_normals()
         v.normal = vec3(0,0,0);
     }
 
-	for (int i = 0; i < vertices_.size(); i++) 
-	{
+	//for (int i = 0; i < vertices_.size(); i++)
+	//{ 
 		for (Triangle& t : triangles_)
 		{
-			if (t.i0 == i || t.i1 == i || t.i2 == i) vertices_[i].normal = t.normal;
+			const vec3& p0 = vertices_[t.i0].position;
+			const vec3& p1 = vertices_[t.i1].position;
+			const vec3& p2 = vertices_[t.i2].position;
+
+			double w0, w1, w2;
+			angleWeights(p0, p1, p2, w0, w1, w2);
+
+			//adding the normals all together
+			vertices_[t.i0].normal += t.normal * w0;
+			vertices_[t.i1].normal += t.normal * w1;
+			vertices_[t.i2].normal += t.normal * w2;
+
+			//if (t.i0 == i || t.i1 == i || t.i2 == i) vertices_[i].normal = t.normal;
 		}
-	}
+//}
+		for (Vertex& v : vertices_)
+		{
+			v.normal = normalize(v.normal);
+		}
+	
 
     /** \todo
      * In some scenes (e.g the office scene) some objects should be flat
