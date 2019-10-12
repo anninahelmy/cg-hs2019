@@ -152,31 +152,27 @@ void Mesh::compute_normals()
         v.normal = vec3(0,0,0);
     }
 
-	//for (int i = 0; i < vertices_.size(); i++)
-	//{ 
-		for (Triangle& t : triangles_)
-		{
-			const vec3& p0 = vertices_[t.i0].position;
-			const vec3& p1 = vertices_[t.i1].position;
-			const vec3& p2 = vertices_[t.i2].position;
+	for (Triangle& t : triangles_)
+	{
+		const vec3& p0 = vertices_[t.i0].position;
+		const vec3& p1 = vertices_[t.i1].position;
+		const vec3& p2 = vertices_[t.i2].position;
 
-			double w0, w1, w2;
-			// -Weigh the normals by their triangles' angles.
-			angleWeights(p0, p1, p2, w0, w1, w2);
+		double w0, w1, w2;
 
-			//adding the normals all together
-			vertices_[t.i0].normal += t.normal * w0;
-			vertices_[t.i1].normal += t.normal * w1;
-			vertices_[t.i2].normal += t.normal * w2;
+		// Weigh the normals by their triangles' angles.
+		angleWeights(p0, p1, p2, w0, w1, w2);
 
-			//if (t.i0 == i || t.i1 == i || t.i2 == i) vertices_[i].normal = t.normal;
-		}
-//}
-		for (Vertex& v : vertices_)
-		{
-			v.normal = normalize(v.normal);
-		}
-	
+		//adding the normals all together
+		vertices_[t.i0].normal += t.normal * w0;
+		vertices_[t.i1].normal += t.normal * w1;
+		vertices_[t.i2].normal += t.normal * w2;
+	}
+
+	for (Vertex& v : vertices_)
+	{
+		v.normal = normalize(v.normal);
+	}
 
     /** \todo
      * In some scenes (e.g the office scene) some objects should be flat
@@ -324,15 +320,15 @@ intersect_triangle(const Triangle&  _triangle,
 	_intersection_t = z_det / main_det;
 
 	// Check if alpha, beta, gamma > 0, to get an intersection within the triangle.
-	if (alpha < 0 || beta < 0 || gamma < 0 || _intersection_t < 0) return false;
+	if ( alpha < 0 || beta < 0 || gamma < 0 || _intersection_t < 0) return false;
 
 	_intersection_point = _ray(_intersection_t);
 
 	// if objects are flat shaded the intersection normal is the normal of the intersected triangle
-	if (draw_mode_ == FLAT) {
+	if (draw_mode_ == FLAT)
+	{
 		_intersection_normal = _triangle.normal;
 	}
-
 	//if objects are phong shaded we need to use the interpolate vertex normals (with formula n(x) = alpha*n(p0)+beta*n(p1)+gamma*n(p2)
 	else
 	{

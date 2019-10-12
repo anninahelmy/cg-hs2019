@@ -101,7 +101,7 @@ vec3 Scene::trace(const Ray& _ray, int _depth)
 	vec3 reflection = reflect(_ray.direction, normal);
 	Ray reflection_ray;
 	reflection_ray.direction = reflection;
-	reflection_ray.origin = point + (0.0001 * normal);
+	reflection_ray.origin = point + (shadow_ray_offset * normal);
 	vec3 reflected_color = trace(reflection_ray, _depth + 1);
 
 	return (1 - object->material.mirror) * color + object->material.mirror * reflected_color;
@@ -143,13 +143,8 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 	vec3 diffuse = vec3(0, 0, 0);
 	vec3 specular = vec3(0, 0, 0);
 
-	//variables for intersection
-	Object_ptr  object;
-	vec3        point, normal;
-	double      t;
-
 	//compute intensity of light source for diffuse and specular contribution (with shadow)
-	for (Light light : lights) {
+	for (const Light& light : lights) {
 		// Compute the shadow ray, the origin is the intersection point but since
 		// it's needed to send the shadow ray from a displaced intersection point
 		// to the light source, add a little bit (0.000001) of the direction vector
@@ -158,13 +153,17 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
 
 		//direction of the shadow is from the intersection point to the light source
 		shadow.direction = normalize(light.position - _point);
-		shadow.origin = _point + 0.000001 * shadow.direction;
+		shadow.origin = _point + shadow_ray_offset * shadow.direction;
 
+		//variables for intersection
+		Object_ptr  object;
+		vec3        point, normal;
+		double      t;
 		//boolean to figure out if an intersection happens (shadow hits object and only ambient contribution is visible)
 		bool intersection = intersect(shadow, object, point, normal, t);
 
-		if (!intersection && t < distance(light.position, _point)) {
-			double nl = dot(normalize(_normal), normalize((light.position - _point)));
+		if (!intersection || t > distance(light.position, _point)) {
+			double nl = dot(normalize(_normal), shadow.direction);
 			if (nl > 0) diffuse += light.color * nl * _material.diffuse;
 
 			double rv = dot(2 * normalize(_normal) * nl - (normalize(light.position - _point)), _view);
