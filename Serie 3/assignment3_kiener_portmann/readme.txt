@@ -26,4 +26,5 @@ We changed the scene.sce file many times to better understand the error (-> toon
 The stripes had exactly the color of the background. 
 After playing around with the scene.sce we got the impression that something's wrong with the shadow (see toon_faces_debug_[...]). 
 So we changed the scene.cpp file in a way that we trace the shadow to see where it's coming from (which color it has)(toon_faces_debug_traced-shadows).
-Having this idea we checked the code from exercise 3 (lightning) line after line and finally saw that one condition was falsely implemented.
+Having this idea we checked the code from exercise 2 (lightning) line after line and finally saw that one condition was falsely implemented. Hence we thought that
+we would deliver also our corrected solution scene.cpp from exercise 2.
