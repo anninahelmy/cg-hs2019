@@ -28,8 +28,8 @@
 // Animation speed (10.0 looks good)
 #define ANIMATION_SPEED 10.0
 
-GLfloat alpha = 210.f, beta = -70.f;
-GLfloat zoom = 2.f;
+GLfloat alpha = 230.f, beta = -70.f;
+GLfloat zoom = 4.f;
 
 double cursorX;
 double cursorY;
@@ -189,6 +189,9 @@ void init_opengl(void)
     glClearColor(0, 0, 0, 0);
 }
 
+float fn_to_plot(float x, float y) {
+	return cos(x * x + y * y);
+}
 
 //========================================================================
 // Modify the height of each vertex according to the pressure
@@ -204,11 +207,15 @@ void adjust_grid(void)
         for (x = 0;  x < GRIDW;  x++)
         {
             pos = y * GRIDW + x;
-            vertex[pos].z = (float) (p[x][y] * (1.0 / 50.0));
+			float x_scaled = 4.0 * x / GRIDH - 2;
+			float y_scaled = 4.0 * y / GRIDW - 2;
+			vertex[pos].z = fn_to_plot(x_scaled, y_scaled);
+			vertex[pos].r = 0.1 + 0.6 * (x % 2 == 0);
+			vertex[pos].g = vertex[pos].z / 4 + 0.5;
+			vertex[pos].b = 0.1 + 0.6 * (y % 2 == 0);
         }
     }
 }
-
 
 //========================================================================
 // Calculate wave propagation
