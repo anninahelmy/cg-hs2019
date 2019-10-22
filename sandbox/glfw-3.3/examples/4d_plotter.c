@@ -1,8 +1,14 @@
 /*****************************************************************************
- * 4d function plotter
- * Modified wave animation from Jakob Thomsen, 2002
- *
- * Takes a function with three variables (x, y, t) as user input as plots it (t is the time variable).
+ * 4d function plotter: 
+ * * Takes a function with three variables (x, y, t) as user input as plots it (t is the time variable).
+
+ * Modified wave simulation in OpenGL from Jakob Thomsen, 2002
+ * (C) 2002 Jakob Thomsen
+ * http://home.in.tum.de/~thomsen
+ * Modified for GLFW by Sylvain Hellegouarch - sh@programmationworld.com
+ * Modified for variable frame rate by Marcus Geelnard
+ * 2003-Jan-31: Minor cleanups and speedups / MG
+ * 2010-10-24: Formatting and cleanup - Camilla LÃ¶wy
  *****************************************************************************/
 
 #if defined(_MSC_VER)
@@ -27,7 +33,7 @@
 #define ANIMATION_SPEED 5.0
 #define DEFINITION_RANGE 5.0
 
-char fn_string[100] = "-sqrt(1 - x * x - y * y) + (sin(t) > 0 ? sin(t) : -sin(t))";
+char fn_string[100];
 
 GLfloat alpha = 230.f, beta = -70.f;
 GLfloat zoom = 4.f;
