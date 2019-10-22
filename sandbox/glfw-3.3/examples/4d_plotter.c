@@ -1,11 +1,8 @@
 /*****************************************************************************
- * Wave Simulation in OpenGL
- * (C) 2002 Jakob Thomsen
- * http://home.in.tum.de/~thomsen
- * Modified for GLFW by Sylvain Hellegouarch - sh@programmationworld.com
- * Modified for variable frame rate by Marcus Geelnard
- * 2003-Jan-31: Minor cleanups and speedups / MG
- * 2010-10-24: Formatting and cleanup - Camilla Löwy
+ * 4d function plotter
+ * Modified wave animation from Jakob Thomsen, 2002
+ *
+ * Takes a function with three variables (x, y, t) as user input as plots it (t is the time variable).
  *****************************************************************************/
 
 #if defined(_MSC_VER)
@@ -209,7 +206,7 @@ double fn_to_plot(double x, double y, double t) {
 }
 
 //========================================================================
-// Modify the height of each vertex according to the pressure
+// Modify the height of each vertex according to the input function
 //========================================================================
 
 void adjust_grid(void)
@@ -235,7 +232,7 @@ void adjust_grid(void)
 }
 
 //========================================================================
-// Calculate wave propagation
+// Calculate function by time
 //========================================================================
 
 void calc_grid(void)
@@ -425,7 +422,7 @@ int main(int argc, char* argv[])
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    window = glfwCreateWindow(640, 480, "Wave Simulation", NULL, NULL);
+    window = glfwCreateWindow(640, 480, "4d_plotter", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -469,14 +466,14 @@ int main(int argc, char* argv[])
             dt = dt_total > MAX_DELTA_T ? MAX_DELTA_T : dt_total;
             dt_total -= dt;
 
-            // Calculate wave propagation
+       
             calc_grid();
         }
 
         // Compute height of each vertex
         adjust_grid();
 
-        // Draw wave grid to OpenGL display
+        // Draw function grid to OpenGL display
         draw_scene(window);
 
         glfwPollEvents();

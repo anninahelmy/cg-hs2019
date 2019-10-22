@@ -25,28 +25,16 @@ endif()
 
 set(GLAD_GL "${GLFW_SOURCE_DIR}/deps/glad/gl.h"
             "${GLFW_SOURCE_DIR}/deps/glad_gl.c")
+set(TINYEXPR "${GLFW_SOURCE_DIR}/examples/tinyexpr.h"
+            "${GLFW_SOURCE_DIR}/examples/tinyexpr.c")			
 set(GETOPT "${GLFW_SOURCE_DIR}/deps/getopt.h"
            "${GLFW_SOURCE_DIR}/deps/getopt.c")
 set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
                 "${GLFW_SOURCE_DIR}/deps/tinycthread.c")
 
-add_executable(boing WIN32 MACOSX_BUNDLE boing.c ${ICON} ${GLAD_GL})
-add_executable(gears WIN32 MACOSX_BUNDLE gears.c ${ICON} ${GLAD_GL})
-add_executable(heightmap WIN32 MACOSX_BUNDLE heightmap.c ${ICON} ${GLAD_GL})
-add_executable(offscreen offscreen.c ${ICON} ${GLAD_GL})
-add_executable(particles WIN32 MACOSX_BUNDLE particles.c ${ICON} ${TINYCTHREAD} ${GETOPT} ${GLAD_GL})
-add_executable(sharing WIN32 MACOSX_BUNDLE sharing.c ${ICON} ${GLAD_GL})
-add_executable(simple WIN32 MACOSX_BUNDLE simple.c ${ICON} ${GLAD_GL})
-add_executable(splitview WIN32 MACOSX_BUNDLE splitview.c ${ICON} ${GLAD_GL})
-add_executable(wave WIN32 MACOSX_BUNDLE wave.c ${ICON} ${GLAD_GL})
+add_executable(4d_plotter WIN32 MACOSX_BUNDLE 4d_plotter.c ${ICON} ${GLAD_GL} ${TINYEXPR})
 
-target_link_libraries(particles "${CMAKE_THREAD_LIBS_INIT}")
-if (RT_LIBRARY)
-    target_link_libraries(particles "${RT_LIBRARY}")
-endif()
-
-set(WINDOWS_BINARIES boing gears heightmap particles sharing simple splitview wave)
-set(CONSOLE_BINARIES offscreen)
+set(WINDOWS_BINARIES 4d_plotter)
 
 set_target_properties(${WINDOWS_BINARIES} ${CONSOLE_BINARIES} PROPERTIES
                       FOLDER "GLFW3/Examples")
@@ -58,14 +46,8 @@ if (MSVC)
 endif()
 
 if (APPLE)
-    set_target_properties(boing PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Boing")
-    set_target_properties(gears PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Gears")
-    set_target_properties(heightmap PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Heightmap")
-    set_target_properties(particles PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Particles")
-    set_target_properties(sharing PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Sharing")
-    set_target_properties(simple PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Simple")
-    set_target_properties(splitview PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "SplitView")
-    set_target_properties(wave PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Wave")
+   
+    set_target_properties(4d_plotter PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "4d_plotter")
 
     set_target_properties(${WINDOWS_BINARIES} PROPERTIES
                           RESOURCE glfw.icns
