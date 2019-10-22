@@ -26,7 +26,7 @@
 #define MAX_DELTA_T 0.01
 
 // Animation speed (10.0 looks good)
-#define ANIMATION_SPEED 10.0
+#define ANIMATION_SPEED 5.0
 
 GLfloat alpha = 230.f, beta = -70.f;
 GLfloat zoom = 4.f;
@@ -189,8 +189,8 @@ void init_opengl(void)
     glClearColor(0, 0, 0, 0);
 }
 
-float fn_to_plot(float x, float y) {
-	return cos(x * x + y * y);
+float fn_to_plot(float x, float y, double t) {
+	return cos(x * x + y * y - t);
 }
 
 //========================================================================
@@ -209,7 +209,7 @@ void adjust_grid(void)
             pos = y * GRIDW + x;
 			float x_scaled = 4.0 * x / GRIDH - 2;
 			float y_scaled = 4.0 * y / GRIDW - 2;
-			vertex[pos].z = fn_to_plot(x_scaled, y_scaled);
+			vertex[pos].z = fn_to_plot(x_scaled, y_scaled, glfwGetTime() * ANIMATION_SPEED);
 			vertex[pos].r = 0.1 + 0.6 * (x % 2 == 0);
 			vertex[pos].g = vertex[pos].z / 4 + 0.5;
 			vertex[pos].b = 0.1 + 0.6 * (y % 2 == 0);
