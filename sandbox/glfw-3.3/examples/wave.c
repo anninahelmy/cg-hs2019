@@ -204,6 +204,7 @@ double fn_to_plot(double x, double y, double t) {
 	}
 	else {
 		printf("Entered function term could not be parsed at %d\n", err);
+		exit(1);
 	}
 }
 
@@ -225,9 +226,10 @@ void adjust_grid(void)
 			float x_scaled = DEFINITION_RANGE * x / GRIDH - DEFINITION_RANGE / 2;
 			float y_scaled = DEFINITION_RANGE * y / GRIDW - DEFINITION_RANGE / 2;
 			vertex[pos].z = fn_to_plot(x_scaled, y_scaled, glfwGetTime() * ANIMATION_SPEED);
-			vertex[pos].r = 0.1 + 0.6 * (x % 2 == 0);
-			vertex[pos].g = vertex[pos].z / 4 + 0.5;
-			vertex[pos].b = 0.1 + 0.6 * (y % 2 == 0);
+			float intensity = vertex[pos].z / 4 + 0.5;
+			vertex[pos].r = 0.1 * (x % 2) + 0.5 + 0.5 * intensity;
+			vertex[pos].g = 0.1 * (x % 2) + intensity;
+			vertex[pos].b = 0.1 * (x % 2) + 1 - intensity;
         }
     }
 }
