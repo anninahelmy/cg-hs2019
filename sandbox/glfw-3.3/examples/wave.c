@@ -21,12 +21,16 @@
 #include <GLFW/glfw3.h>
 
 #include <linmath.h>
+#include "tinyexpr.h"
 
 // Maximum delta T to allow for differential calculations
 #define MAX_DELTA_T 0.01
 
 // Animation speed (10.0 looks good)
 #define ANIMATION_SPEED 5.0
+#define DEFINITION_RANGE 5.0
+
+char fn_string[100] = "-sqrt(1 - x * x - y * y) + (sin(t) > 0 ? sin(t) : -sin(t))";
 
 GLfloat alpha = 230.f, beta = -70.f;
 GLfloat zoom = 4.f;
@@ -40,8 +44,8 @@ struct Vertex
     GLfloat r, g, b;
 };
 
-#define GRIDW 50
-#define GRIDH 50
+#define GRIDW 100
+#define GRIDH 100
 #define VERTEXNUM (GRIDW*GRIDH)
 
 #define QUADW (GRIDW - 1)
@@ -189,8 +193,18 @@ void init_opengl(void)
     glClearColor(0, 0, 0, 0);
 }
 
-float fn_to_plot(float x, float y, double t) {
-	return cos(x * x + y * y - t);
+double fn_to_plot(double x, double y, double t) {
+	te_variable vars[] = { {"x", &x}, {"y", &y}, {"t", &t} };
+	int err;
+	te_expr* expr = te_compile(fn_string, vars, 3, &err);
+	if (expr) {
+		double result = te_eval(expr);
+		te_free(expr);
+		return result;
+	}
+	else {
+		printf("Entered function term could not be parsed at %d\n", err);
+	}
 }
 
 //========================================================================
@@ -207,8 +221,9 @@ void adjust_grid(void)
         for (x = 0;  x < GRIDW;  x++)
         {
             pos = y * GRIDW + x;
-			float x_scaled = 4.0 * x / GRIDH - 2;
-			float y_scaled = 4.0 * y / GRIDW - 2;
+			
+			float x_scaled = DEFINITION_RANGE * x / GRIDH - DEFINITION_RANGE / 2;
+			float y_scaled = DEFINITION_RANGE * y / GRIDW - DEFINITION_RANGE / 2;
 			vertex[pos].z = fn_to_plot(x_scaled, y_scaled, glfwGetTime() * ANIMATION_SPEED);
 			vertex[pos].r = 0.1 + 0.6 * (x % 2 == 0);
 			vertex[pos].g = vertex[pos].z / 4 + 0.5;
@@ -396,6 +411,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 int main(int argc, char* argv[])
 {
+	printf("Type in a function term (using x, y, t):\n");
+	gets(fn_string);
+
     GLFWwindow* window;
     double t, dt_total, t_old;
     int width, height;
