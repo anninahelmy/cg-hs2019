@@ -1,7 +1,8 @@
 Assignment 4 - Joana Portmann, Ann Kiener
 
 First of all, we both got the OpenGL assignment code to run.
-For the 'special' task we changed an existing wave simulation to this 4d function plotter.
+For the 'special' task we changed an existing wave simulation, which was part of an existing 'example'-Project to a 4d function plotter.
+Since this is a project by itself that we choose to alter, we submit the whole folder to be sure that it will work on someone else's computer if they were to test it.
 
 We started by changing the color of the simulation. Then we changed the code such that a static function got plotted. 
 Next we added the time parameter t. Up to now the function to plot needed to be hardcoded. 
@@ -11,9 +12,7 @@ To execute this program, one will have to click (in Visual Studio at least) on
 Erstellen > 4d-plotter-Eigenschaftseiten > Linker > System > choose Konsole (/SUBSYSTEM:CONSOLE)for Subsystem.
 Only then the console will appear to ask you for a function input.
 We put an example of that in our folder and a video of the output.
-
-Since this is a project by itself we choose to submit the whole folder to be sure that it will work on someone else's computer if they were to test it.
-
+The changed file can be found under glfw-3.3 > examples > 4d_plotter.c. 
 
 Problems we encountered:
 
