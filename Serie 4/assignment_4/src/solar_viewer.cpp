@@ -194,6 +194,8 @@ keyboard(int key, int scancode, int action, int mods)
 // around their orbits. This position is needed to set up the camera in the scene
 // (see Solar_viewer::paint)
 void Solar_viewer::update_body_positions() {
+
+	earth_.pos_ = sun_.pos_ + vec4(earth_.distance_, 0, 0, 0);
 }
 
 //-----------------------------------------------------------------------------

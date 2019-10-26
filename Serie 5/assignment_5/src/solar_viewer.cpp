@@ -208,6 +208,9 @@ void Solar_viewer::update_body_positions() {
      *       and earth's moon. Do not explicitly place the space ship, its position
      *       is fixed for now.
      * */
+
+	earth_.pos_ = sun_.pos_ + vec4(earth_.distance_, 0, 0, 0);
+	earth_.time_step(1);
 }
 
 //-----------------------------------------------------------------------------
@@ -397,6 +400,19 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     sun_.tex_.bind();
     unit_sphere_.draw();
 
+	// render earth
+	m_matrix = mat4::rotate_y(earth_.angle_orbit_) * mat4::translate(earth_.pos_) * mat4::rotate_y(earth_.angle_self_) * mat4::scale(earth_.radius_);
+	mv_matrix = _view * m_matrix;
+	mvp_matrix = _projection * mv_matrix;
+	color_shader_.use();
+	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+	
+	color_shader_.set_uniform("tex", 0);
+	color_shader_.set_uniform("greyscale", (int)greyscale_);
+	earth_.tex_.bind();
+	unit_sphere_.draw();
+
+	
     /** \todo Render the star background, the spaceship, and the rest of the celestial bodies.
      *  For now, everything should be rendered with the color_shader_,
      *  which expects uniforms "modelview_projection_matrix", "tex" and "grayscale"
