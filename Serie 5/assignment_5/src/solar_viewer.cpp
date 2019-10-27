@@ -426,7 +426,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 	color_shader_.set_uniform("tex", 0);
 	color_shader_.set_uniform("greyscale", (int)greyscale_);
 	ship_.tex_.bind();
-	unit_sphere_.draw();
+	ship_.draw();
 	*/
 
     /** \todo Render the star background, the spaceship, and the rest of the celestial bodies.
