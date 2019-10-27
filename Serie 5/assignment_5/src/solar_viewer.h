@@ -66,6 +66,7 @@ protected:
     /// \param _view the view matrix for the scene
     void draw_scene(mat4& _projection, mat4& _view);
 
+	void draw_planet(mat4& _projection, mat4& _view, Planet &planet);
     /// update function on every timer event (controls the animation)
     virtual void timer();
 

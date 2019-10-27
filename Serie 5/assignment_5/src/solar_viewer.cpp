@@ -407,32 +407,17 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     sun_.tex_.bind();
     unit_sphere_.draw();
 
-	// render earth
-	m_matrix = mat4::translate(earth_.pos_) * mat4::rotate_y(earth_.angle_self_) * mat4::scale(earth_.radius_);
-	mv_matrix = _view * m_matrix;
-	mvp_matrix = _projection * mv_matrix;
-	color_shader_.use();
-	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
-	
-	color_shader_.set_uniform("tex", 0);
-	color_shader_.set_uniform("greyscale", (int)greyscale_);
-	earth_.tex_.bind();
-	unit_sphere_.draw();
+	//render all the other planets
+	draw_planet(_projection, _view, earth_);
+	draw_planet(_projection, _view, moon_);
+	draw_planet(_projection, _view, mercury_);
+	draw_planet(_projection, _view, venus_);
+	draw_planet(_projection, _view, mars_);
+	draw_planet(_projection, _view, stars_);
 
-	// render mercury
-	m_matrix = mat4::translate(mercury_.pos_) * mat4::rotate_y(mercury_.angle_self_) * mat4::scale(mercury_.radius_);
-	mv_matrix = _view * m_matrix;
-	mvp_matrix = _projection * mv_matrix;
-	color_shader_.use();
-	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
-
-	color_shader_.set_uniform("tex", 0);
-	color_shader_.set_uniform("greyscale", (int)greyscale_);
-	mercury_.tex_.bind();
-	unit_sphere_.draw();
-
-	// render moon
-	m_matrix = mat4::translate(moon_.pos_) * mat4::rotate_y(moon_.angle_self_) * mat4::scale(moon_.radius_);
+/*
+	// render ship 
+	m_matrix = mat4::translate(ship_.pos_) * mat4::rotate_y(ship_.angle_) * mat4::scale(ship_.radius_);
 	mv_matrix = _view * m_matrix;
 	mvp_matrix = _projection * mv_matrix;
 	color_shader_.use();
@@ -440,45 +425,10 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 
 	color_shader_.set_uniform("tex", 0);
 	color_shader_.set_uniform("greyscale", (int)greyscale_);
-	moon_.tex_.bind();
+	ship_.tex_.bind();
 	unit_sphere_.draw();
+	*/
 
-	// render venus
-	m_matrix = mat4::translate(venus_.pos_) * mat4::rotate_y(venus_.angle_self_) * mat4::scale(venus_.radius_);
-	mv_matrix = _view * m_matrix;
-	mvp_matrix = _projection * mv_matrix;
-	color_shader_.use();
-	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
-
-	color_shader_.set_uniform("tex", 0);
-	color_shader_.set_uniform("greyscale", (int)greyscale_);
-	venus_.tex_.bind();
-	unit_sphere_.draw();
-
-	// render mars
-	m_matrix = mat4::translate(mars_.pos_) * mat4::rotate_y(mars_.angle_self_) * mat4::scale(mars_.radius_);
-	mv_matrix = _view * m_matrix;
-	mvp_matrix = _projection * mv_matrix;
-	color_shader_.use();
-	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
-
-	color_shader_.set_uniform("tex", 0);
-	color_shader_.set_uniform("greyscale", (int)greyscale_);
-	mars_.tex_.bind();
-	unit_sphere_.draw();
-
-	// render stars
-	m_matrix = mat4::translate(stars_.pos_) * mat4::rotate_y(stars_.angle_self_) * mat4::scale(stars_.radius_);
-	mv_matrix = _view * m_matrix;
-	mvp_matrix = _projection * mv_matrix;
-	color_shader_.use();
-	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
-
-	color_shader_.set_uniform("tex", 0);
-	color_shader_.set_uniform("greyscale", (int)greyscale_);
-	stars_.tex_.bind();
-	unit_sphere_.draw();
-	
     /** \todo Render the star background, the spaceship, and the rest of the celestial bodies.
      *  For now, everything should be rendered with the color_shader_,
      *  which expects uniforms "modelview_projection_matrix", "tex" and "grayscale"
@@ -502,6 +452,27 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     // check for OpenGL errors
     glCheckError();
 }
+
+//function for the actual rendering of the objects with textures
+void Solar_viewer::draw_planet(mat4& _projection, mat4 &_view, Planet &planet) {
+
+	mat4 m_matrix;
+	mat4 mv_matrix;
+	mat4 mvp_matrix;
+
+	m_matrix = mat4::translate(planet.pos_) * mat4::rotate_y(planet.angle_self_) * mat4::scale(planet.radius_);
+	mv_matrix = _view * m_matrix;
+	mvp_matrix = _projection * mv_matrix;
+	color_shader_.use();
+	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+
+	color_shader_.set_uniform("tex", 0);
+	color_shader_.set_uniform("greyscale", (int)greyscale_);
+	planet.tex_.bind();
+	unit_sphere_.draw();
+
+}
+
 
 void Solar_viewer::randomize_planets()
 {
