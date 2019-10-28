@@ -43,7 +43,7 @@ Solar_viewer::Solar_viewer(const char* _title, int _width, int _height)
 {
     // start animation
     timer_active_ = true;
-    time_step_ = 50.0f/24.0f; // one hour
+    time_step_ = 20.0f/24.0f; // one hour
 
     // rendering parameters
     greyscale_     = false;
@@ -92,6 +92,17 @@ keyboard(int key, int scancode, int action, int mods)
              *    - key 9 should increase and key 8 should decrease the `dist_factor_`
              *    - 2.5 < `dist_factor_` < 20.0
              */
+			case GLFW_KEY_8:
+			{
+				if (dist_factor_ >= 3.0) dist_factor_ -= 0.5;
+				break;
+			}
+
+			case GLFW_KEY_9:
+			{
+				if(dist_factor_ <= 19.5) dist_factor_ += 0.5;
+				break;
+			}
 
             case GLFW_KEY_R:
             {
@@ -209,15 +220,15 @@ void Solar_viewer::update_body_positions() {
      *       is fixed for now.
      * */
 
-	earth_.pos_ = mat4::rotate_y(earth_.angle_orbit_) * (sun_.pos_ + vec4(earth_.distance_, 0, 0, 0));
+	earth_.pos_ = mat4::rotate_y(earth_.angle_orbit_) * (sun_.pos_ + vec4(earth_.distance_, 0, 0, 1));
 
-	mercury_.pos_ = mat4::rotate_y(mercury_.angle_orbit_) * (sun_.pos_ + vec4(mercury_.distance_, 0, 0, 0));
+	mercury_.pos_ = mat4::rotate_y(mercury_.angle_orbit_) * (sun_.pos_ + vec4(mercury_.distance_, 0, 0, 1));
 
-	moon_.pos_ = earth_.pos_ + mat4::rotate_y(moon_.angle_orbit_) * vec4(moon_.distance_, 0, 0, 0);
+	moon_.pos_ = mat4::translate(earth_.pos_) * mat4::rotate_y(moon_.angle_orbit_) * vec4(moon_.distance_, 0, 0, 1);
 
-	venus_.pos_ = mat4::rotate_y(venus_.angle_orbit_) * (sun_.pos_ + vec4(venus_.distance_, 0, 0, 0));
+	venus_.pos_ = mat4::rotate_y(venus_.angle_orbit_) * (sun_.pos_ + vec4(venus_.distance_, 0, 0, 1));
 
-	mars_.pos_ = mat4::rotate_y(mars_.angle_orbit_) * (sun_.pos_ + vec4(mars_.distance_, 0, 0, 0));
+	mars_.pos_ = mat4::rotate_y(mars_.angle_orbit_) * (sun_.pos_ + vec4(mars_.distance_, 0, 0, 1));
 }
 
 //-----------------------------------------------------------------------------
@@ -324,42 +335,54 @@ void Solar_viewer::initialize()
 
 void Solar_viewer::paint()
 {
-    // clear framebuffer and depth buffer first
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// clear framebuffer and depth buffer first
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    /** \todo Implement navigation through the solar system.
-     *   - Allow camera rotation by modifying the view matrix.
-     *     `x_angle_` and `y_angle` hold the necessary information and are
-     *     updated by key presses (see `Solar_viewer::keyboard(...)`).
-     *   - Position the camera at distance `dist_factor_` from the planet's center (in units of planet radii).
-     *     This distance should be controlled by keys 8 and 9.
-     *   - When keys `1` to `6` are pressed, the camera should move to look at
-     *     the corresponding celestial body (this functionality is already provided,
-     *     see `Solar_viewer::keyboard(...)`).
-     *   - Pointer `planet_to_look_at_` stores the current body to view.
-     *   - When you are in spaceship mode (member in_ship_), the camera should
-     *     hover slightly behind and above the ship and rotate along with it (so that
-     *     when the ship moves and turns it always remains stationary in view
-     *     while the solar system moves and spins around it).
-     *
-     *  Hint: planet centers are stored in "Planet::pos_".
-     */
-    // For now, view the sun from a fixed position...
-    //vec4     eye = vec4(0,0,7,1.0);
-    //vec4  center = sun_.pos_;
-    //vec4      up = vec4(0,1,0,0);
-    //float radius = sun_.radius_;
-    //mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
+	/** \todo Implement navigation through the solar system.
+	 *   - Allow camera rotation by modifying the view matrix.
+	 *     `x_angle_` and `y_angle` hold the necessary information and are
+	 *     updated by key presses (see `Solar_viewer::keyboard(...)`).
+	 *   - Position the camera at distance `dist_factor_` from the planet's center (in units of planet radii).
+	 *     This distance should be controlled by keys 8 and 9.
+	 *   - When keys `1` to `6` are pressed, the camera should move to look at
+	 *     the corresponding celestial body (this functionality is already provided,
+	 *     see `Solar_viewer::keyboard(...)`).
+	 *   - Pointer `planet_to_look_at_` stores the current body to view.
+	 *   - When you are in spaceship mode (member in_ship_), the camera should
+	 *     hover slightly behind and above the ship and rotate along with it (so that
+	 *     when the ship moves and turns it always remains stationary in view
+	 *     while the solar system moves and spins around it).
+	 *
+	 *  Hint: planet centers are stored in "Planet::pos_".
+	 */
+	 // For now, view the sun from a fixed position...
+	 //vec4     eye = vec4(0,0,7,1.0);
+	 //vec4  center = sun_.pos_;
+	 //vec4      up = vec4(0,1,0,0);
+	 //float radius = sun_.radius_;
+	 //mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
 
+	//not in ship
+	vec4 eye, center, up;
 
-		vec4 up = vec4(0, 1, 0, 0);
-		float radius = planet_to_look_at_->radius_ * dist_factor_;
-		vec4 eye = vec4(0, 0, radius, 1.0);
-		vec4 center = planet_to_look_at_->pos_;
-
-		eye = mat4::translate(center) * mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_) * eye;
-
-		mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
+	if (!in_ship_)
+	{
+		center = planet_to_look_at_->pos_;
+		mat4 rotation = mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_);
+		float radius = planet_to_look_at_->radius_;
+		eye = center + rotation * vec4(0, 0, (dist_factor_ * radius), 0);
+		up = rotation * vec4(0, 1, 0, 0);
+	}
+	else //in ship
+	{
+		center = ship_.pos_;
+		mat4 rotation = mat4::rotate_y(y_angle_ + ship_.angle_) * mat4::rotate_x(-10.0f);
+		float radius = 2.0f * ship_.radius_;
+		eye = center + rotation * vec4(0, 0, dist_factor_ * radius, 0);
+		up = rotation * vec4(0, 1, 0, 0);
+	}
+	
+	mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
 	
 
 
@@ -427,7 +450,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 	draw_planet(_projection, _view, mars_);
 	draw_planet(_projection, _view, stars_);
 
-/*
+
 	// render ship 
 	m_matrix = mat4::translate(ship_.pos_) * mat4::rotate_y(ship_.angle_) * mat4::scale(ship_.radius_);
 	mv_matrix = _view * m_matrix;
@@ -439,7 +462,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 	color_shader_.set_uniform("greyscale", (int)greyscale_);
 	ship_.tex_.bind();
 	ship_.draw();
-	*/
+	
 
     /** \todo Render the star background, the spaceship, and the rest of the celestial bodies.
      *  For now, everything should be rendered with the color_shader_,
