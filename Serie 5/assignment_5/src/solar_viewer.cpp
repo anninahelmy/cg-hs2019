@@ -43,7 +43,7 @@ Solar_viewer::Solar_viewer(const char* _title, int _width, int _height)
 {
     // start animation
     timer_active_ = true;
-    time_step_ = 1.0f/24.0f; // one hour
+    time_step_ = 50.0f/24.0f; // one hour
 
     // rendering parameters
     greyscale_     = false;
@@ -345,11 +345,23 @@ void Solar_viewer::paint()
      *  Hint: planet centers are stored in "Planet::pos_".
      */
     // For now, view the sun from a fixed position...
-    vec4     eye = vec4(0,0,7,1.0);
-    vec4  center = sun_.pos_;
-    vec4      up = vec4(0,1,0,0);
-    float radius = sun_.radius_;
-    mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
+    //vec4     eye = vec4(0,0,7,1.0);
+    //vec4  center = sun_.pos_;
+    //vec4      up = vec4(0,1,0,0);
+    //float radius = sun_.radius_;
+    //mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
+
+
+		vec4 up = vec4(0, 1, 0, 0);
+		float radius = planet_to_look_at_->radius_ * dist_factor_;
+		vec4 eye = vec4(0, 0, radius, 1.0);
+		vec4 center = planet_to_look_at_->pos_;
+
+		eye = mat4::translate(center) * mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_) * eye;
+
+		mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
+	
+
 
     billboard_x_angle_ = billboard_y_angle_ = 0.0f;
 
