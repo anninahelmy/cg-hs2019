@@ -107,12 +107,16 @@ bool Texture::createSunBillboardTexture()
     *   - Experiment with the color and with how fast you change the transparency until the effect satisfies you
     **/
 
+
+
     for (int col = 0; col < width; ++col) {
         for (int row = 0; row < height; ++row) {
+			// Distance of pixel to center
+			float distance = sqrt(pow(width/2 - col, 2) + pow(height/2 - row, 2));
             img[(row * width + col) * 4 + 0] = 255; // R
-            img[(row * width + col) * 4 + 1] = 255; // G
-            img[(row * width + col) * 4 + 2] = 255; // B
-            img[(row * width + col) * 4 + 3] = 255; // A
+            img[(row * width + col) * 4 + 1] = 200; // G
+            img[(row * width + col) * 4 + 2] = 0; // B
+            img[(row * width + col) * 4 + 3] = distance < 400 ? distance < 250 ? 255 : 50 : 0; // A
         }
     }
 

@@ -34,7 +34,35 @@ void main()
     * value
      */
 
+	 // Phong shading model: I = I_a * m_a + I_l * (m_d(n * l) + m_s(r*v)^s)
+
     vec3 color = vec3(0.0,0.0,0.0);
+
+	vec3 c_material = texture(tex, v2f_texcoord.st).rgb;
+	vec3 I_a = sunlight;
+	vec3 I_in = sunlight;
+
+
+	// Add ambient light
+	color += I_a * c_material;
+
+	 // Add diffuse light
+    float nl = dot(v2f_normal, v2f_light);
+	if (nl > 0) {
+		color += I_in * c_material * nl;
+	}
+
+	// Add specular light
+	vec3 v2f_reflect = reflect(v2f_light, v2f_normal);
+	float rv = dot(v2f_view, v2f_reflect);
+	if (nl > 0 && rv > 0) {
+	color += I_in * c_material * pow(dot(v2f_reflect, v2f_view), shininess);
+	}
+
+	
+
+
+
 
     // convert RGB color to YUV color and use only the luminance
     if (greyscale) color = vec3(0.299*color.r+0.587*color.g+0.114*color.b);

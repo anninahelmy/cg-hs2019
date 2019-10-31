@@ -246,6 +246,9 @@ void Solar_viewer::initialize()
     glClearColor(1,1,1,0);
     glEnable(GL_DEPTH_TEST);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // Allocate textures
     sun_    .tex_.init(GL_TEXTURE0, GL_TEXTURE_2D, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT);
     mercury_.tex_.init(GL_TEXTURE0, GL_TEXTURE_2D, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT);
@@ -386,12 +389,27 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
      *  matrix, and light position in addition to the color_shader_ parameters.
      */
 
+
+
     /** \todo Render the sun's halo here using the "color_shader_"
     *   - Construct a model matrix that scales the billboard to 3 times the
     *     sun's radius and orients it according to billboard_x_angle_ and
     *     billboard_y_angle_
     *   - Bind the texture for and draw sunglow_
     **/
+
+	m_matrix = mat4::rotate_y(sun_.angle_self_) * mat4::scale(3 * sun_.radius_);
+	mv_matrix = _view * m_matrix;
+	mvp_matrix = _projection * mv_matrix;
+	color_shader_.use();
+	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+	color_shader_.set_uniform("t", sun_animation_time, true /* Indicate that time parameter is optional;
+															 it may be optimized away by the GLSL    compiler if it's unused. */);
+	color_shader_.set_uniform("tex", 0);
+	color_shader_.set_uniform("greyscale", (int)greyscale_);
+	sunglow_.tex_.bind();
+	sunglow_.draw();
+
 
     // check for OpenGL errors
     glCheckError();
