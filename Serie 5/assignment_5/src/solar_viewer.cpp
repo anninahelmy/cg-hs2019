@@ -221,7 +221,7 @@ void Solar_viewer::update_body_positions() {
 
 	mercury_.pos_ = mat4::rotate_y(mercury_.angle_orbit_) * (sun_.pos_ + vec4(mercury_.distance_, 0, 0, 1));
 
-	moon_.pos_ = mat4::translate(earth_.pos_) * mat4::rotate_y(moon_.angle_orbit_) * vec4(-moon_.distance_, 0, 0, 1);
+	moon_.pos_ = mat4::translate(earth_.pos_) * mat4::rotate_y(moon_.angle_orbit_) * vec4(moon_.distance_, 0, 0, 1);
 
 	venus_.pos_ = mat4::rotate_y(venus_.angle_orbit_) * (sun_.pos_ + vec4(venus_.distance_, 0, 0, 1));
 
