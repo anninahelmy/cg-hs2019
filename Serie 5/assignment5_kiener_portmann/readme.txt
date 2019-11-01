@@ -18,13 +18,13 @@ we decided to create a seperate function (see Solar_viewer::draw_planet) to excl
 This method sets the camera to the right position. We started with the " not in ship" case. For the "in ship" case we had to add to the rotation angle the ships angle. 
 To have a better view we rotate a little bit around the x-axis and doubled the ships radius for the eye positioning. 
 
-4. Add ke functions for key 8 and 9
+4. Add the functions for key 8 and 9
 We decided to always change the dist factor by adding +/- 0.5. Then we set the condition to not come to close or go away to far by a simple 
 if-statement (dist_factor_ >= 3.0) to improve performance by not having to calculate (in another step) a minimum or maximum of two numbers. 
 
 
 Problems we encountered:
 
- - We frst didn't clearly seperate setting the position in update_body_positions and then calculate the matrices for the transformations. We started by directly do everything where we defined the m_matrix.
+ - We first didn't clearly seperate setting the position in update_body_positions and then calculate the matrices for the transformations. We started by directly do everything where we defined the m_matrix.
  - Another problem was to imagine all the transformations. Especially for setting the camera (paint-method) it was hard to clearly think everything through.
  
