@@ -88,7 +88,18 @@ keyboard(int key, int scancode, int action, int mods)
                 break;
             }
 
-            // \todo Paste your dist_factor_-modifying keypress code from assignment 5.
+			// Key 9 increases and key 8 decreases the `dist_factor_` within the range - 2.5 < `dist_factor_` < 20.0.
+			case GLFW_KEY_8:
+			{
+				if (dist_factor_ >= 3.0) dist_factor_ -= 0.5;
+				break;
+			}
+
+			case GLFW_KEY_9:
+			{
+				if (dist_factor_ <= 19.5) dist_factor_ += 0.5;
+				break;
+			}
 
             case GLFW_KEY_R:
             {
@@ -196,7 +207,16 @@ keyboard(int key, int scancode, int action, int mods)
 // around their orbits. This position is needed to set up the camera in the scene
 // (see Solar_viewer::paint)
 void Solar_viewer::update_body_positions() {
-    // \todo Paste your planet positioning code from assignment 5 here.
+
+	earth_.pos_ = mat4::rotate_y(earth_.angle_orbit_) * (sun_.pos_ + vec4(earth_.distance_, 0, 0, 1));
+
+	mercury_.pos_ = mat4::rotate_y(mercury_.angle_orbit_) * (sun_.pos_ + vec4(mercury_.distance_, 0, 0, 1));
+
+	moon_.pos_ = mat4::translate(earth_.pos_) * mat4::rotate_y(moon_.angle_orbit_) * vec4(moon_.distance_, 0, 0, 1);
+
+	venus_.pos_ = mat4::rotate_y(venus_.angle_orbit_) * (sun_.pos_ + vec4(venus_.distance_, 0, 0, 1));
+
+	mars_.pos_ = mat4::rotate_y(mars_.angle_orbit_) * (sun_.pos_ + vec4(mars_.distance_, 0, 0, 1));
 }
 
 //-----------------------------------------------------------------------------
@@ -309,12 +329,35 @@ void Solar_viewer::paint()
     // clear framebuffer and depth buffer first
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // \todo Paste your viewing/navigation code from assignment 5 here.
+  /*
     vec4     eye = vec4(0,0,7,1.0);
     vec4  center = sun_.pos_;
     vec4      up = vec4(0,1,0,0);
     float radius = sun_.radius_;
     mat4    view = mat4::look_at(vec3(eye), (vec3)center, (vec3)up);
+	*/
+
+	//not in ship
+	vec4 eye, center, up;
+
+	if (!in_ship_)
+	{
+		center = planet_to_look_at_->pos_;
+		mat4 rotation = mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_);
+		float radius = planet_to_look_at_->radius_;
+		eye = center + rotation * vec4(0, 0, (dist_factor_ * radius), 0);
+		up = rotation * vec4(0, 1, 0, 0);
+	}
+	else //in ship
+	{
+		center = ship_.pos_;
+		mat4 rotation = mat4::rotate_y(y_angle_ + ship_.angle_) * mat4::rotate_x(-10.0f);
+		float radius = 2.0f * ship_.radius_;
+		eye = center + rotation * vec4(0, 0, dist_factor_ * radius, 0);
+		up = rotation * vec4(0, 1, 0, 0);
+	}
+
+	mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
 
     /** \todo Orient the billboard used to display the sun's glow
      *  Update billboard_x_andle_ and billboard_y_angle_ so that the billboard plane
@@ -377,7 +420,26 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     sun_.tex_.bind();
     unit_sphere_.draw();
 
-    // \todo Paste your star/planet/moon/ship drawing calls from assignment 5 here.
+	//render all the other planets
+	draw_planet(_projection, _view, earth_);
+	draw_planet(_projection, _view, moon_);
+	draw_planet(_projection, _view, mercury_);
+	draw_planet(_projection, _view, venus_);
+	draw_planet(_projection, _view, mars_);
+	draw_planet(_projection, _view, stars_);
+
+
+	// render ship 
+	m_matrix = mat4::translate(ship_.pos_) * mat4::rotate_y(ship_.angle_) * mat4::scale(ship_.radius_);
+	mv_matrix = _view * m_matrix;
+	mvp_matrix = _projection * mv_matrix;
+	color_shader_.use();
+	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+
+	color_shader_.set_uniform("tex", 0);
+	color_shader_.set_uniform("greyscale", (int)greyscale_);
+	ship_.tex_.bind();
+	ship_.draw();
 
     /** \todo Switch from using color_shader_ to the fancier shaders you'll
      * implement in this assignment:
@@ -413,6 +475,26 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 
     // check for OpenGL errors
     glCheckError();
+}
+
+//function for the actual rendering of the objects with textures
+void Solar_viewer::draw_planet(mat4& _projection, mat4& _view, Planet& planet) {
+
+	mat4 m_matrix;
+	mat4 mv_matrix;
+	mat4 mvp_matrix;
+
+	m_matrix = mat4::translate(planet.pos_) * mat4::rotate_y(planet.angle_self_) * mat4::scale(planet.radius_);
+	mv_matrix = _view * m_matrix;
+	mvp_matrix = _projection * mv_matrix;
+	color_shader_.use();
+	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+
+	color_shader_.set_uniform("tex", 0);
+	color_shader_.set_uniform("greyscale", (int)greyscale_);
+	planet.tex_.bind();
+	unit_sphere_.draw();
+
 }
 
 void Solar_viewer::randomize_planets()
