@@ -339,23 +339,29 @@ void Solar_viewer::paint()
 
 	//not in ship
 	vec4 eye, center, up;
+	float radius, x_rotation, y_rotation;
+
 
 	if (!in_ship_)
 	{
 		center = planet_to_look_at_->pos_;
-		mat4 rotation = mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_);
-		float radius = planet_to_look_at_->radius_;
-		eye = center + rotation * vec4(0, 0, (dist_factor_ * radius), 0);
-		up = rotation * vec4(0, 1, 0, 0);
+		radius = planet_to_look_at_->radius_;
+		x_rotation = x_angle_;
+		y_rotation = y_angle_;
 	}
 	else //in ship
 	{
 		center = ship_.pos_;
-		mat4 rotation = mat4::rotate_y(y_angle_ + ship_.angle_) * mat4::rotate_x(-10.0f);
-		float radius = 2.0f * ship_.radius_;
-		eye = center + rotation * vec4(0, 0, dist_factor_ * radius, 0);
-		up = rotation * vec4(0, 1, 0, 0);
+		y_rotation = y_angle_ + ship_.angle_;
+		x_rotation = -10.0f;
+		radius = 2.0f * ship_.radius_;
 	}
+
+	mat4 rotation = mat4::rotate_y(y_rotation) * mat4::rotate_x(x_rotation);
+	eye = center + rotation * vec4(0, 0, (dist_factor_ * radius), 0);
+	up = rotation * vec4(0, 1, 0, 0);
+	billboard_x_angle_ = x_rotation;
+	billboard_y_angle_ = y_rotation;
 
 	mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
 
@@ -364,7 +370,7 @@ void Solar_viewer::paint()
      *  drawn to produce the sun's halo is orthogonal to the view vector for
      *  the sun's center.
      */
-    billboard_x_angle_ = billboard_y_angle_ = 0.0f;
+  
 
     mat4 projection = mat4::perspective(fovy_, (float)width_/(float)height_, near_, far_);
     draw_scene(projection, view);
@@ -459,8 +465,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     *     billboard_y_angle_
     *   - Bind the texture for and draw sunglow_
     **/
-
-	m_matrix = mat4::rotate_y(sun_.angle_self_) * mat4::scale(3 * sun_.radius_);
+	m_matrix = mat4::rotate_y(billboard_y_angle_) * mat4::rotate_x(billboard_x_angle_) * mat4::scale(3 * sun_.radius_);
 	mv_matrix = _view * m_matrix;
 	mvp_matrix = _projection * mv_matrix;
 	color_shader_.use();

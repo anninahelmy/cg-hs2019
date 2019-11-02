@@ -112,11 +112,13 @@ bool Texture::createSunBillboardTexture()
     for (int col = 0; col < width; ++col) {
         for (int row = 0; row < height; ++row) {
 			// Distance of pixel to center
-			float distance = sqrt(pow(width/2 - col, 2) + pow(height/2 - row, 2));
+			float distance = sqrt(pow(width / 2 - col, 2) + pow(height / 2 - row, 2));
             img[(row * width + col) * 4 + 0] = 255; // R
-            img[(row * width + col) * 4 + 1] = 200; // G
+            img[(row * width + col) * 4 + 1] = 150; // G
             img[(row * width + col) * 4 + 2] = 0; // B
-            img[(row * width + col) * 4 + 3] = distance < 400 ? distance < 250 ? 255 : 50 : 0; // A
+			float dist_norm = fmax((distance - width / 8.f) / (width / 4.f - width / 8.f), 0);
+			float alpha = fmax(fmin(1 / (2.f * dist_norm) - 0.5f, 1), 0);
+            img[(row * width + col) * 4 + 3] = alpha * 255; // A
         }
     }
 
