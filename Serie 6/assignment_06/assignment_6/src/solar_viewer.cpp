@@ -449,7 +449,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 	ship_.draw();
 
 	//render all the other planets
-	draw_planet(_projection, _view, earth_);
+	
 	draw_planet(_projection, _view, moon_);
 	draw_planet(_projection, _view, mercury_);
 	draw_planet(_projection, _view, venus_);
@@ -469,23 +469,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 
 
 
-    /** \todo Render the sun's halo here using the "color_shader_"
-    *   - Construct a model matrix that scales the billboard to 3 times the
-    *     sun's radius and orients it according to billboard_x_angle_ and
-    *     billboard_y_angle_
-    *   - Bind the texture for and draw sunglow_
-    **/
-	m_matrix = mat4::rotate_y(billboard_y_angle_) * mat4::rotate_x(billboard_x_angle_) * mat4::scale(3 * sun_.radius_);
-	mv_matrix = _view * m_matrix;
-	mvp_matrix = _projection * mv_matrix;
-	color_shader_.use();
-	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
-	color_shader_.set_uniform("t", sun_animation_time, true /* Indicate that time parameter is optional;
-															 it may be optimized away by the GLSL    compiler if it's unused. */);
-	color_shader_.set_uniform("tex", 0);
-	color_shader_.set_uniform("greyscale", (int)greyscale_);
-	sunglow_.tex_.bind();
-	sunglow_.draw();
+  
 
 
 	// Render earth
@@ -508,6 +492,24 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 	earth_shader_.set_uniform("greyscale", (int)greyscale_);
 	earth_.tex_.bind();
 	unit_sphere_.draw();
+
+	/** \todo Render the sun's halo here using the "color_shader_"
+  *   - Construct a model matrix that scales the billboard to 3 times the
+  *     sun's radius and orients it according to billboard_x_angle_ and
+  *     billboard_y_angle_
+  *   - Bind the texture for and draw sunglow_
+  **/
+	m_matrix = mat4::rotate_y(billboard_y_angle_) * mat4::rotate_x(billboard_x_angle_) * mat4::scale(3 * sun_.radius_);
+	mv_matrix = _view * m_matrix;
+	mvp_matrix = _projection * mv_matrix;
+	color_shader_.use();
+	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+	color_shader_.set_uniform("t", sun_animation_time, true /* Indicate that time parameter is optional;
+															 it may be optimized away by the GLSL    compiler if it's unused. */);
+	color_shader_.set_uniform("tex", 0);
+	color_shader_.set_uniform("greyscale", (int)greyscale_);
+	sunglow_.tex_.bind();
+	sunglow_.draw();
 
 
 

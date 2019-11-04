@@ -91,4 +91,5 @@ void main()
 
     // add required alpha value
     f_color = vec4(color, 1.0);
+	//f_color = vec4(cloud_greyscale, cloud_greyscale, cloud_greyscale, 1.);
 }
