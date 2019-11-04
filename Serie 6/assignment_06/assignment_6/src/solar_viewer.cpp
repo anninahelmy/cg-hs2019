@@ -209,13 +209,9 @@ keyboard(int key, int scancode, int action, int mods)
 void Solar_viewer::update_body_positions() {
 
 	earth_.pos_ = mat4::rotate_y(earth_.angle_orbit_) * (sun_.pos_ + vec4(earth_.distance_, 0, 0, 1));
-
 	mercury_.pos_ = mat4::rotate_y(mercury_.angle_orbit_) * (sun_.pos_ + vec4(mercury_.distance_, 0, 0, 1));
-
 	moon_.pos_ = mat4::translate(earth_.pos_) * mat4::rotate_y(moon_.angle_orbit_) * vec4(moon_.distance_, 0, 0, 1);
-
 	venus_.pos_ = mat4::rotate_y(venus_.angle_orbit_) * (sun_.pos_ + vec4(venus_.distance_, 0, 0, 1));
-
 	mars_.pos_ = mat4::rotate_y(mars_.angle_orbit_) * (sun_.pos_ + vec4(mars_.distance_, 0, 0, 1));
 }
 
@@ -426,13 +422,18 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     sun_.tex_.bind();
     unit_sphere_.draw();
 
-	//render all the other planets
-	draw_planet(_projection, _view, earth_);
-	draw_planet(_projection, _view, moon_);
-	draw_planet(_projection, _view, mercury_);
-	draw_planet(_projection, _view, venus_);
-	draw_planet(_projection, _view, mars_);
-	draw_planet(_projection, _view, stars_);
+	//render stars
+	m_matrix = mat4::translate(stars_.pos_) *
+	mat4::scale(stars_.radius_) *
+		mat4::rotate_y(stars_.angle_self_);
+	mv_matrix = _view * m_matrix;
+	mvp_matrix = _projection * mv_matrix;
+	color_shader_.use();
+	color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+	color_shader_.set_uniform("tex", 0);
+	color_shader_.set_uniform("greyscale", static_cast<int>(greyscale_));
+	stars_.tex_.bind();
+	unit_sphere_.draw();
 
 	// render ship 
 	m_matrix = mat4::translate(ship_.pos_) * mat4::rotate_y(ship_.angle_) * mat4::scale(ship_.radius_);
@@ -445,6 +446,15 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 	color_shader_.set_uniform("greyscale", (int)greyscale_);
 	ship_.tex_.bind();
 	ship_.draw();
+
+	//render all the other planets
+	draw_planet(_projection, _view, earth_);
+	draw_planet(_projection, _view, moon_);
+	draw_planet(_projection, _view, mercury_);
+	draw_planet(_projection, _view, venus_);
+	draw_planet(_projection, _view, mars_);
+
+	
 
     /** \todo Switch from using color_shader_ to the fancier shaders you'll
      * implement in this assignment:
