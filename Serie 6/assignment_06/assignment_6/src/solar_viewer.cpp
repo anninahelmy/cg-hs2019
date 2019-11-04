@@ -504,7 +504,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     earth_shader_.set_uniform("night_texture", 1);
     earth_shader_.set_uniform("cloud_texture", 2);
     earth_shader_.set_uniform("gloss_texture", 3);
-	earth_shader_.set_uniform("tex", 0);
+//	earth_shader_.set_uniform("tex", 0);
 	earth_shader_.set_uniform("greyscale", (int)greyscale_);
 	earth_.tex_.bind();
 	unit_sphere_.draw();
