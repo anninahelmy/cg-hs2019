@@ -349,12 +349,12 @@ void Solar_viewer::paint()
 	{
 		center = ship_.pos_;
 		y_rotation = y_angle_ + ship_.angle_;
-		x_rotation = -10.0f;
+		x_rotation = 10.0f;
 		radius = 2.0f * ship_.radius_;
 	}
 
 	mat4 rotation = mat4::rotate_y(y_rotation) * mat4::rotate_x(x_rotation);
-	eye = center + rotation * vec4(0, 0, (dist_factor_ * radius), 0);
+	eye = center + rotation * vec4(0, 0, -(dist_factor_ * radius), 0);
 	up = rotation * vec4(0, 1, 0, 0);
 	billboard_x_angle_ = x_rotation;
 	billboard_y_angle_ = y_rotation;
@@ -435,7 +435,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
 	stars_.tex_.bind();
 	unit_sphere_.draw();
 
-	// render ship 
+	// render ship
 	m_matrix = mat4::translate(ship_.pos_) * mat4::rotate_y(ship_.angle_) * mat4::scale(ship_.radius_);
 	mv_matrix = _view * m_matrix;
 	mvp_matrix = _projection * mv_matrix;
