@@ -44,7 +44,20 @@ mat4 ShadowViewer::m_constructLightViewMatrix(size_t li, size_t cube_face) const
     * defined by scene_view_matrix.
     * Hint: use mat4::look_at
     **/
-    return mat4::identity() * scene_view_matrix;
+	Light light = m_light[li];
+	vec4 eye = scene_view_matrix * light.position();
+	float x = cube_face == 0 ? 1 : cube_face == 1 ? -1 : 0;
+	float y = cube_face == 2 ? 1 : cube_face == 3 ? -1 : 0;
+	float z = cube_face == 4 ? 1 : cube_face == 5 ? -1 : 0;
+	vec3 center = eye + vec3(x, y, z);
+	vec3 up;
+	if (cube_face == 0 || cube_face == 1) up = vec3(0, 1, 0);
+	else up = vec4(1, 0, 0, 0);
+
+
+	mat4 lightView = mat4::look_at(eye, center, up);
+
+    return lightView * scene_view_matrix;
 }
 
 mat4 ShadowViewer::m_constructLightProjectionMatrix() const {
@@ -52,7 +65,7 @@ mat4 ShadowViewer::m_constructLightProjectionMatrix() const {
     * Construct the projection matrix for rendering the scene from the perspective
     * of the light to generate shadow maps.
     **/
-    return mat4::identity();
+    return mat4::perspective(90, 1.0f, 0.1, 6);
 }
 
 void ShadowViewer::m_render_shadow_cubemap(size_t li, const mat4 &plane_m_matrix, const mat4 &mesh_m_matrix) {
@@ -103,19 +116,13 @@ void ShadowViewer::draw(const mat4 &view_matrix, const mat4 &projection_matrix) 
     /////////////////////////////////////
     mat4 plane_m_matrix   = mat4::scale(3.0) * mat4::rotate_x(90.0f);
     mat4 plane_mv_matrix  = view_matrix * plane_m_matrix;
-    mat4 plane_mvp_matrix = projection_matrix * plane_mv_matrix;
-
-	mat3 plane_normal_matrix = transpose(inverse(mat3(plane_mv_matrix)));
+    mat4 plane_mvp_matrix = projection_matrix * plane_mv_matrix; 
+    mat3 plane_n_matrix   = transpose(inverse(mat3(plane_mv_matrix)));
 
     mat4 mesh_m_matrix    = m_mesh->modelMatrix();
     mat4 mesh_mv_matrix   = view_matrix * mesh_m_matrix;
     mat4 mesh_mvp_matrix  = projection_matrix * mesh_mv_matrix;
-
-	mat3 mesh_normal_matrix = transpose(inverse(mat3(mesh_mv_matrix)));
-    // \todo Construct the matrices for transforming normals into eye coordinates
-    //       You can paste in your solution from assignment 6.
-    mat3 plane_n_matrix   = mat4::identity();
-    mat3 mesh_n_matrix    = mat4::identity();
+    mat3 mesh_n_matrix    = transpose(inverse(mat3(mesh_mv_matrix)));
 
     vec3 ambient_light(0.2, 0.2, 0.2),
         plane_diffuse (0.5, 0.5, 0.7), // used as ambient color too
