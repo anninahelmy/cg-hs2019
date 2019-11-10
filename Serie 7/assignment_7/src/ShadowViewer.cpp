@@ -105,11 +105,13 @@ void ShadowViewer::draw(const mat4 &view_matrix, const mat4 &projection_matrix) 
     mat4 plane_mv_matrix  = view_matrix * plane_m_matrix;
     mat4 plane_mvp_matrix = projection_matrix * plane_mv_matrix;
 
+	mat3 plane_normal_matrix = transpose(inverse(mat3(plane_mv_matrix)));
+
     mat4 mesh_m_matrix    = m_mesh->modelMatrix();
     mat4 mesh_mv_matrix   = view_matrix * mesh_m_matrix;
     mat4 mesh_mvp_matrix  = projection_matrix * mesh_mv_matrix;
 
-
+	mat3 mesh_normal_matrix = transpose(inverse(mat3(mesh_mv_matrix)));
     // \todo Construct the matrices for transforming normals into eye coordinates
     //       You can paste in your solution from assignment 6.
     mat3 plane_n_matrix   = mat4::identity();
