@@ -24,7 +24,6 @@ out vec4 f_light_contribution;
 
 void main()
 {
-    vec3 color = vec3(0.0f);
     // Orient the normal so it always points opposite the camera rays:
     vec3 N = -sign(dot(v2f_normal, v2f_ec_vertex)) *
              normalize(v2f_normal);
@@ -45,7 +44,26 @@ void main()
     * instead of additive tolerance: compare the fragment's distance to 1.01x the
     * distance from the shadow map.
     ***/
+	 // Phong shading model: I = I_a * m_a + I_l * (m_d(n * l) + m_s(r*v)^s)
+
+    vec3 color = vec3(0.0,0.0,0.0);
+	vec3 vertexLight = - light_position + v2f_ec_vertex;
+	vec3 v2f_light = normalize(-vertexLight);
+	
+	vec3 v2f_view = -normalize(v2f_ec_vertex);
+	
+
+	 // Add diffuse light and specular light
+	if (length(vertexLight) < 1.01*texture(shadow_map, vertexLight).r) {
+		float nl = dot(N, v2f_light);
+		if (nl > 0) color += light_color * diffuse_color * nl;
+		vec3 r = reflect(v2f_light, N);
+		float rv = dot(v2f_view, r);
+		if (nl > 0 && rv > 0) color += light_color * specular_color * pow(rv, shininess);
+
+	}
 
     // append the required alpha value
     f_light_contribution = vec4(color, 1.0);
+	//f_light_contribution = vec4(0.0025*texture(shadow_map, vertexLight).r, 0, 0, 1.f);
 }
