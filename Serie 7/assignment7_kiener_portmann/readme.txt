@@ -23,3 +23,5 @@ fragments only. This was familiar to us from previous assignments.
 Then also in the part 'writing fragment shaders' we implemented the missing code
 in shadowmap_gen.frag, which also was not too difficult to compute the distance from
 the light to the scene by keeping in mind what was discussed in the lecture.
+
+The main issue in this exercise was to clearly understand the different coordinate systems and when to transform to which one. 
