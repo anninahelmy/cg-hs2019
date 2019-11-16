@@ -70,7 +70,8 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
 	// Debugging
 	//std::cout << dir << "\n";
 	for (int i = 0; i < symbols.length(); i++) {
-		std::cout << dir << "\n";
+		// Debugging
+		//std::cout << dir << "\n";
 		if (symbols.at(i) == '+') dir = changeDir(this->rotation_angle_deg, dir);
 		if (symbols.at(i) == '-') dir = changeDir(-this->rotation_angle_deg, dir);
 		if (symbols.at(i) == 'F') {
