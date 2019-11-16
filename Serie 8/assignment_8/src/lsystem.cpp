@@ -27,8 +27,8 @@ std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
         Perform one iteration of grammar expansion on `symbol_sequence`.
         Use the expandSymbol method
     */
-    string result;
-	for(int i = 0, i < symbole_sequence.length(), i++) result += expandSymbol(symbol_sequence.at(i));
+    std::string result;
+	for (int i = 0, i < symbole_sequence.length(), i++) result += expandSymbol(symbol_sequence.at(i));
     return result;
 
 }
@@ -38,8 +38,9 @@ std::string LindenmayerSystem::expand(std::string const& initial, uint32_t num_i
         TODO 1.3
         Perform `num_iters` iterations of grammar expansion (use expandOnce)
     */
-
-    return "";
+	string result = initial;
+	for (int i=0, i < num_iters, i++) result = expandOnce(result);
+    return result;
 }
 
 std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
@@ -62,8 +63,32 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     */
 
     //============================================================
-    return lines;
+	std::stack pos, angle;
+	vec2 pos = (0, 0);
+	vec2 dir = (0, 1);
+	for (i = 0, i < symbol.length(), i++) {
+		if (symbol.at(i) == '+') dir = changeDir(rules.rotation_angle_deg, dir);
+		if (symbol.at(i) == '-') dir = changeDir(-rules.rotation_angle_deg, dir);
+		if (symbol.at(i) == 'F') {
+			vec2 start = pos;
+			vec2 end = start + dir;
+			lines[i] = {start, end};
+			pos = end;
+		}
+		if (symbol.at(i) == '[') {
+			
+		}
+	}
+	
+	return lines;
 }
+
+vec2 changeDir(float _angle, vec2 dir) {
+	mat2 rotation = mat2(cos(_angle),-sin(_angle),
+					sin(_angle),cos(_angle));
+	return rotation * dir;
+}
+
 
 std::string LindenmayerSystemStochastic::expandSymbol(unsigned char const& sym) {
     /*============================================================
