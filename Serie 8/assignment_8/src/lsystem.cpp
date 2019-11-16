@@ -5,20 +5,18 @@
 #include <iostream>
 
 std::string LindenmayerSystemDeterministic::expandSymbol(unsigned char const& sym) {
-    /*============================================================
-        TODO 1.1
-        For a given symbol in the sequence, what should it be replaced with after expansion?
+	/*============================================================
+		TODO 1.1
+		For a given symbol in the sequence, what should it be replaced with after expansion?
 
-        You may find useful:
-            map.find: Iterator to an element with key equivalent to key. If no such element is found, past-the-end (see end()) iterator is returned.
-            http://en.cppreference.com/w/cpp/container/unordered_map/find
-    */
-	
+		You may find useful:
+			map.find: Iterator to an element with key equivalent to key. If no such element is found, past-the-end (see end()) iterator is returned.
+			http://en.cppreference.com/w/cpp/container/unordered_map/find
+	*/
+
 	auto const search = rules.find(sym);
-	if(search != rules.end()) return search->second;
-		else return sym; 
-	
-	//return rules[sym];    
+	if (search != rules.end()) return search->second;
+	else return {char(sym)};
 }
 
 std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
@@ -28,7 +26,7 @@ std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
         Use the expandSymbol method
     */
     std::string result;
-	for (int i = 0, i < symbole_sequence.length(), i++) result += expandSymbol(symbol_sequence.at(i));
+	for (int i = 0; i < symbol_sequence.length(); i++) result += expandSymbol(symbol_sequence.at(i));
     return result;
 
 }
@@ -38,8 +36,10 @@ std::string LindenmayerSystem::expand(std::string const& initial, uint32_t num_i
         TODO 1.3
         Perform `num_iters` iterations of grammar expansion (use expandOnce)
     */
-	string result = initial;
-	for (int i=0, i < num_iters, i++) result = expandOnce(result);
+	std::string result = initial;
+	for (int i = 0; i < num_iters + 1; i++) result = expandOnce(result);
+	//Debugging: result-string seems correct
+	//printf("%s\n", result.c_str());
     return result;
 }
 
@@ -63,20 +63,32 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     */
 
     //============================================================
-	std::stack pos, angle;
-	vec2 pos = (0, 0);
-	vec2 dir = (0, 1);
-	for (i = 0, i < symbol.length(), i++) {
-		if (symbol.at(i) == '+') dir = changeDir(rules.rotation_angle_deg, dir);
-		if (symbol.at(i) == '-') dir = changeDir(-rules.rotation_angle_deg, dir);
-		if (symbol.at(i) == 'F') {
+	std::stack<vec2> dirToJumpBack;             
+	std::stack<vec2> posToJumpBack;
+	vec2 pos = vec2(0, 0);
+	vec2 dir = vec2(0, 1);
+	// Debugging
+	//std::cout << dir << "\n";
+	for (int i = 0; i < symbols.length(); i++) {
+		std::cout << dir << "\n";
+		if (symbols.at(i) == '+') dir = changeDir(this->rotation_angle_deg, dir);
+		if (symbols.at(i) == '-') dir = changeDir(-this->rotation_angle_deg, dir);
+		if (symbols.at(i) == 'F') {
 			vec2 start = pos;
 			vec2 end = start + dir;
-			lines[i] = {start, end};
+			lines.push_back({start, end});
+			//std::cout << start << " -> " << end;
 			pos = end;
 		}
-		if (symbol.at(i) == '[') {
-			
+		if (symbols.at(i) == '[') {
+			dirToJumpBack.push(dir);
+			posToJumpBack.push(pos);
+		}
+		if (symbols.at(i) == ']') {
+			pos = posToJumpBack.top();
+			posToJumpBack.pop();
+			dir = dirToJumpBack.top();
+			dirToJumpBack.pop();
 		}
 	}
 	
@@ -84,8 +96,9 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
 }
 
 vec2 changeDir(float _angle, vec2 dir) {
-	mat2 rotation = mat2(cos(_angle),-sin(_angle),
-					sin(_angle),cos(_angle));
+	float angle_rad = _angle * M_PI / 180.0;
+	mat2 rotation = mat2(cos(angle_rad),-sin(angle_rad),
+					sin(angle_rad),cos(angle_rad));
 	return rotation * dir;
 }
 

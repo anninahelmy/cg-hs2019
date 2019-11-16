@@ -73,5 +73,7 @@ protected:
 	virtual std::string expandSymbol(unsigned char const& sym) override;
 };
 
+vec2 changeDir(float _angle, vec2 dir);
+
 std::shared_ptr<LindenmayerSystem> load_lsystem(std::string const in_file_path);
 void run_lsystem_pipeline(std::string const in_file_path, std::string & out_sequence, std::vector<Segment> & out_segments);
