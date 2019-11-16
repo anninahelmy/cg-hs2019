@@ -3,8 +3,8 @@
 	"stochastic": false,
 	"initial": "F",
 	"angle_deg": 60,
-	"num_iters": 7,
-	"rules": {
-		"F": "?"
-	}
+	"num_iters": 3,
+  "rules": {
+    "F": "F[+F]F"
+  }
 }

@@ -37,7 +37,7 @@ std::string LindenmayerSystem::expand(std::string const& initial, uint32_t num_i
         Perform `num_iters` iterations of grammar expansion (use expandOnce)
     */
 	std::string result = initial;
-	for (int i = 0; i < num_iters + 1; i++) result = expandOnce(result);
+	for (int i = 0; i < num_iters; i++) result = expandOnce(result);
 	//Debugging: result-string seems correct
 	//printf("%s\n", result.c_str());
     return result;
