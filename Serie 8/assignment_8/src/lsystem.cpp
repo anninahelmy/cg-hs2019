@@ -13,9 +13,8 @@ std::string LindenmayerSystemDeterministic::expandSymbol(unsigned char const& sy
             map.find: Iterator to an element with key equivalent to key. If no such element is found, past-the-end (see end()) iterator is returned.
             http://en.cppreference.com/w/cpp/container/unordered_map/find
     */
-
-    return {char(sym)}; // this constructs string from char
-    
+	
+	return rules[sym];    
 }
 
 std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
