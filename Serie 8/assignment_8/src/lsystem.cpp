@@ -112,8 +112,29 @@ std::string LindenmayerSystemStochastic::expandSymbol(unsigned char const& sym) 
 
         Use dice.roll() to get a random number between 0 and 1
     */
+
+	
+	auto const search = rules.find(sym);
+	if (search == rules.end()) {
+		return { char(sym) };
+	};
+
+	auto iteration = this->rules.begin();
+	auto secondIteration = iteration->second.begin();
+	double diceroll = dice.roll();
+
+	for (iteration; iteration != this->rules.end(); iteration++) {
+		if (sym == iteration->first) {
+			for (secondIteration; secondIteration != iteration->second.end(); secondIteration++) {
+				if (diceroll <= secondIteration->probability) {
+					return secondIteration->expansion;
+				}
+			}
+		}
+	}
+
+	return { char(sym) };
     
-    return {char(sym)};
 }
 
 void LindenmayerSystemDeterministic::addRuleDeterministic(unsigned char sym, std::string const& expansion) {
