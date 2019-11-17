@@ -121,6 +121,8 @@ std::string LindenmayerSystemStochastic::expandSymbol(unsigned char const& sym) 
 
 	auto iteration = this->rules.begin();
 	auto secondIteration = iteration->second.begin();
+
+	//roll a value between 0 and 1 to choose a rule
 	double diceroll = dice.roll();
 
 	for (iteration; iteration != this->rules.end(); iteration++) {
