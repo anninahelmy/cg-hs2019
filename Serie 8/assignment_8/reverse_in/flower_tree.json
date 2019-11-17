@@ -3,7 +3,7 @@
 	"stochastic": false,
 	"initial": "T",
 	"angle_deg": 120,
-	"num_iters": 10,
+	"num_iters": 7,
   "rules": {
     "T": "SF[+[F]T][-[F]T]",
     "S": "SSF"
