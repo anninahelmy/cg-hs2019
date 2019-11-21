@@ -15,3 +15,5 @@ We had problems at first with the bat-script because it did not write any data i
 too much time searching for the bug in the code only to realize that we accidentally erased the return value.
 
 Another difficulty was to know if we are doing the 'right' thing, since it was unclear what outputs were roughly expected.
+We also did get some weird flowers growing out a line in the third one but again, maybe this was supposed to be.
+We were quite happy that we always got another result, which indicated that the stochastic aspect worked.
