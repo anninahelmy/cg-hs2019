@@ -72,26 +72,23 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
 	for (int i = 0; i < symbols.length(); i++) {
 		// Debugging
 		//std::cout << dir << "\n";
-		if (symbols.at(i) == '+') dir = changeDir(this->rotation_angle_deg, dir);
-		else if (symbols.at(i) == '-') dir = changeDir(-this->rotation_angle_deg, dir);
-		else if (symbols.at(i) == '[') {
+		switch (symbols.at(i)) {
+		case '+': dir = changeDir(this->rotation_angle_deg, dir); break;
+		case '-': dir = changeDir(-this->rotation_angle_deg, dir); break;
+		case '[':
 			dirToJumpBack.push(dir);
-			posToJumpBack.push(pos);
-		}
-		else if (symbols.at(i) == ']') {
+			posToJumpBack.push(pos); break;
+		case ']':
 			pos = posToJumpBack.top();
 			posToJumpBack.pop();
 			dir = dirToJumpBack.top();
-			dirToJumpBack.pop();
-		}
-		else {
+			dirToJumpBack.pop(); break;
+		default:
 			vec2 start = pos;
 			vec2 end = start + dir;
 			lines.push_back({ start, end });
-			//std::cout << start << " -> " << end;
 			pos = end;
 		}
-
 
 		
 	}
