@@ -61,9 +61,33 @@ float perlin_noise_1d(float x) {
 	 * surrounding x, look up their gradients, evaluate the the
 	 * linear functions these gradients describe, and interpolate these
 	 * values using the smooth interolation polygnomial blending_weight_poly.
-	 * Note: gradients in the gradient lookup table are 2D, 
+	 * Note: gradients in the gradient lookup table are 2D,
 	 */
-	return 0.0f;
+
+	 //find endpoints
+	 float left_endpoint = floor(x);
+	 float right_endpoint = left_endpoint + 1.0;
+
+	 /*calculate for c0 and c1 the hashfunc and then use this to choose from
+	 table of 12 gradients*/
+
+	 int hash_func_left = hash_func(vec2(left_endpoint, 0));
+	 int hash_func_right = hash_func(vec2(right_endpoint, 0));
+
+	 vec2 grad_left = gradients[hash_func_left % 12];
+	 vec2 grad_right = gradients[hash_func_right % 12];
+
+	 //distances
+	float left_distance = x - left_endpoint;
+	float right_distance = x - right_endpoint;
+
+	float blend_weight = blending_weight_poly(left_distance);
+
+	//use smooth interpolation polynomial for interpolation
+	float interpol = mix(grad_left.x * left_distance, grad_right.x * right_distance, blend_weight);
+
+	return interpol;
+
 }
 
 float perlin_fbm_1d(float x) {
@@ -133,7 +157,7 @@ float perlin_fbm(vec2 point) {
 	/** \todo
 	 * Implement 2D fBm as described in the handout. Like in the 1D case, you
 	 * should use the constants num_octaves, freq_multiplier, and
-	 * ampl_multiplier. 
+	 * ampl_multiplier.
 	 */
 	return 0.0f;
 }
@@ -196,4 +220,3 @@ vec3 tex_marble(vec2 point) {
 	 */
 	return vec3(0.0f);
 }
-
