@@ -52,6 +52,7 @@ std::shared_ptr<Mesh> build_terrain_mesh(Array2D<float> const& height_map) {
 	// (iterate over y first then over x to use CPU cache better)
 	for(int gy = 0; gy < grid_size.second; gy++) {
 		for(int gx = 0; gx < grid_size.first; gx++) {
+			//map grid position to index
 			int const idx = xy_to_v_index(gx, gy);
 
 			/** \todo
@@ -62,7 +63,20 @@ std::shared_ptr<Mesh> build_terrain_mesh(Array2D<float> const& height_map) {
 			 * The XY coordinates are calculated so that the full grid covers
 			 * the square [-0.5, 0.5]^2 in the XY plane.
 			 */
-			vertices.at(idx) = vec3(0, 0, 0);
+			
+			//world Z coordinate
+			float height = height_map(gx, gy);
+
+			if (height < WATER_LEVEL) {
+				height = WATER_LEVEL;
+			}
+
+			//calculate the XY coordinates s.t. the vertices span a uniform grid from -0.5 to 0.5
+			vec2 xy = vec2(float(gx) / grid_size.first, float(gy) / grid_size.second);
+			xy -= vec2{ 0.5, 0.5 };
+
+
+			vertices.at(idx) = vec3{ xy.x, xy.y, height };
 		}
 	}
 
@@ -73,6 +87,16 @@ std::shared_ptr<Mesh> build_terrain_mesh(Array2D<float> const& height_map) {
 			 * Triangulate the grid cell whose lower lefthand corner is grid index (gx, gy)
 			 * (You will need to create two triangles to fill the quad.)
 			 **/
+
+			//cover each grid square with two traingles, follow figure 8 on assignment sheet
+
+			int va = xy_to_v_index(gx, gy);
+			int vb = xy_to_v_index(gx + 1, gy);
+			int vc = xy_to_v_index(gx, gy + 1);
+			int vd = xy_to_v_index(gx + 1, gy + 1);
+			faces.emplace_back(va, vb, vc);
+			faces.emplace_back(vb, vd, vc);
+
 		}
 	}
 
