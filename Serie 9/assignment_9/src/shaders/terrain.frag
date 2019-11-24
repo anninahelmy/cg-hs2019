@@ -63,7 +63,7 @@ void main()
 
 		//phong: Ia*ma + Il*md(nl*l) + Il*ms(r*v)^s
 		// normalize normal, light, reflected ligth and view vector
-		
+
 	 	vec3 normal = normalize(v2f_normal);
 	 	vec3 light = normalize(-light_ray);
 	 	vec3 view = normalize(-v2f_ec_vertex);
@@ -74,5 +74,5 @@ void main()
 	 	float specular = (diffuse != 0.0) ? pow(max(0.0, dot(view, reflected)), shininess) : 0.0;
 
 	 	vec3 color = ambient * material + diffuse * material * sunlight + specular * material * sunlight;
-		f_color = vec4(material, 1.0); //alpha value
+		f_color = vec4(color, 1.0); //alpha value
 }
