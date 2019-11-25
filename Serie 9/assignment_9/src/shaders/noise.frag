@@ -193,15 +193,15 @@ float perlin_fbm(vec2 point) {
 	 */
 
 	float amplitude = 1.;
-	 float frequency = 1.;
-	 float final_result = 0;
+	float frequency = 1.;
+	float final_result = 0;
 
 	 //function f in the script is perlin_noise here
 	 for(int i = 0; i < num_octaves; i++ ) {
 		 final_result += amplitude * perlin_noise(point * frequency);
 		 frequency *= freq_multiplier;
 		 amplitude *= ampl_multiplier;
-		 }
+	}
 
 	return final_result;
 }
