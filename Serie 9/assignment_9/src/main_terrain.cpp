@@ -72,11 +72,8 @@ std::shared_ptr<Mesh> build_terrain_mesh(Array2D<float> const& height_map) {
 			}
 
 			//calculate the XY coordinates s.t. the vertices span a uniform grid from -0.5 to 0.5
-			vec2 xy = vec2(float(gx) / grid_size.first, float(gy) / grid_size.second);
-			xy -= vec2{ 0.5, 0.5 };
-
-
-			vertices.at(idx) = vec3{ xy.x, xy.y, height };
+			vec2 xy = vec2((float(gx) / grid_size.first) - 0.5, (float(gy) / grid_size.second) - 0.5);
+			vertices.at(idx) = vec3(xy.x, xy.y, height);
 		}
 	}
 
