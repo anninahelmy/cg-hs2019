@@ -62,6 +62,11 @@ void main()
 	 	vec3 light_ray = v2f_ec_vertex - light_position;
 
 		//phong: Ia*ma + Il*md(nl*l) + Il*ms(r*v)^s
+		
+		vec3 color = vec3(0.0, 0.0, 0.0);
+
+		//add ambient light
+		color += ambient * material;
 		// normalize normal, light, reflected ligth and view vector
 
 	 	vec3 normal = normalize(v2f_normal);
@@ -70,9 +75,12 @@ void main()
 	 	vec3 reflected = normalize(reflect(-light, normal));
 
 	 	// diffuse and specular contributions (use the same material color for both)
-	 	float diffuse  = max(0.0, dot(normal, light));
-	 	float specular = (diffuse != 0.0) ? pow(max(0.0, dot(view, reflected)), shininess) : 0.0;
+		
+	 	float nl  = dot(normal, light);
+	 	float rv = dot(view, reflected);
 
-	 	vec3 color = ambient * material + diffuse * material * sunlight + specular * material * sunlight;
+		if (nl > 0) color += nl * material * sunlight;
+		if(nl > 0 && rv > 0) color += pow(dot(reflected, view), shininess) * material * sunlight;
+
 		f_color = vec4(color, 1.0); //alpha value
 }
