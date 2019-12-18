@@ -91,6 +91,7 @@ bool Shader::load(const char* vfile, const char* ffile, const char* gfile)
         std::string info(length + 1, ' ');
         glGetProgramInfoLog(pid_, length, NULL, &info[0]);
         std::cerr << "Shader: Cannot link program:\n" << info << std::endl;
+        throw std::runtime_error("cannot link opengl shader");
 
         cleanup();
 
@@ -147,8 +148,8 @@ GLint Shader::load_and_compile(const char* filename, GLenum type)
         glGetShaderInfoLog(id, length, NULL, &info[0]);
 
         std::cerr << "Shader: Cannot compile shader \""  << filename << "\"\n" << info << std::endl;
-
         glDeleteShader(id);
+        throw std::runtime_error("cannot compile opengl shader");
 
         return 0;
     }

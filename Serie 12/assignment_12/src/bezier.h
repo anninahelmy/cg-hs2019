@@ -10,7 +10,7 @@ class PiecewiseBezier {
 public:
     PiecewiseBezier() { }
 
-    void set_control_polygon(const std::vector<vec3>& control_polygon, bool loop=false);
+    void set_control_polygon(const std::vector<vec3>& control_polygon, bool loop=true);
 
     // Evaluate the piecewise curve for t in [0, 1].
     // This involves determining which Bezier curve segment contains the

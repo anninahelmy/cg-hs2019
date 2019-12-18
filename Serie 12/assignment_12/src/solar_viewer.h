@@ -66,6 +66,8 @@ protected:
     /// \param _view the view matrix for the scene
     void draw_scene(mat4& _projection, mat4& _view);
 
+	void draw_planet(mat4& _projection, mat4& _view, Planet& planet);
+
     /// update function on every timer event (controls the animation)
     virtual void timer();
 
@@ -115,16 +117,8 @@ private:
     /// update factor for the animation
     float time_step_;
 
-    double total_time_ = 0.0;
-
     /// state whether the rendering should be in color or not
     bool greyscale_;
-
-    bool use_normal_mapping_ = true;
-    bool use_ambient_light_ = false;
-    float specular_ = 1.0;
-    bool do_sun_tricks_ = true;
-    bool proper_background_ = true;
 
     /// Whether/how to display the ship path curve.
     enum CurveDisplayMode { CURVE_SHOW_NONE = 0, CURVE_SHOW_PATH = 1, CURVE_SHOW_PATH_CP = 2, CURVE_SHOW_PATH_FRAME = 3, CURVE_SHOW_NUM_MODES = 4 } curve_display_mode_;

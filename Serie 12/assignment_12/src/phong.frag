@@ -18,33 +18,46 @@ out vec4 f_color;
 
 uniform sampler2D tex;
 uniform bool greyscale;
-uniform bool use_ambient_light;
-uniform float specular;
 
 const float shininess = 8.0;
 const vec3  sunlight = vec3(1.0, 0.941, 0.898);
 
 void main()
 {
+    /**
+    *  Implement the Phong shading model (like in the 1st exercise) by using the passed
+    *  variables and write the resulting color to `color`.
+    *  `tex` should be used as material parameter for ambient, diffuse and specular lighting.
+    * Hints:
+    * - The texture(texture, 2d_position) returns a 4-vector (rgba). You can use
+    * `texture(...).r` to get just the red component or `texture(...).rgb` to get a vec3 color
+    * value
+     */
+
+	 // Phong shading model: I = I_a * m_a + I_l * (m_d(n * l) + m_s(r*v)^s)
 
     vec3 color = vec3(0.0,0.0,0.0);
 
-    // normalize directions
-    vec3 N = normalize(v2f_normal);
-    vec3 L = normalize(v2f_light);
-    vec3 V = normalize(v2f_view);
-    vec3 R = normalize(reflect(-L, N));
+	vec3 c_material = texture(tex, v2f_texcoord.st).rgb;
+	vec3 I_a = 0.2 * sunlight;
+	vec3 I_in = sunlight;
 
-    // compute diffuse and specular intensities
-    float ambient  = use_ambient_light ? 0.2 : 0.0;
-    float diffuse  = max(0.0, dot(N,L));
-    float specular = specular * ((diffuse != 0.0) ? pow(max(0.0, dot(V,R)), shininess) : 0.0);
 
-    // fetch textures
-    vec3 material = texture(tex, v2f_texcoord.st).rgb;
+	// Add ambient light
+	color += I_a * c_material;
 
-    // combine material (=texture) with lighting
-    color = ambient*material*sunlight + diffuse*material*sunlight + specular*material*sunlight;
+	 // Add diffuse light
+    float nl = dot(v2f_normal, v2f_light);
+	if (nl > 0) {
+		color += I_in * c_material * nl;
+	}
+
+	// Add specular light
+	vec3 r = reflect(v2f_light, v2f_normal);
+	float rv = dot(v2f_view, r);
+	if (nl > 0 && rv > 0) {
+		color += I_in * c_material * pow(dot(r, v2f_view), shininess);
+	}
 
     // convert RGB color to YUV color and use only the luminance
     if (greyscale) color = vec3(0.299*color.r+0.587*color.g+0.114*color.b);
@@ -52,3 +65,4 @@ void main()
     // add required alpha value
     f_color = vec4(color, 1.0);
 }
+

@@ -19,9 +19,6 @@ class Sphere
 {
 public:
 
-    Sphere(const Sphere&) = delete;
-    Sphere& operator=(const Sphere&) = delete;
-
     /// default constructor
     /// \param resolution the degree of the tessellation of the sphere
     Sphere(unsigned int resolution=10);

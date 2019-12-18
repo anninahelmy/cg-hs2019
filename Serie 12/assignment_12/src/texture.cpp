@@ -102,23 +102,14 @@ bool Texture::createSunBillboardTexture()
 
     for (int col = 0; col < width; ++col) {
         for (int row = 0; row < height; ++row) {
-            int x = col - width / 2;
-            int y = row - height / 2;
-            int r2 = x*x + y*y;
-            if (r2 < 22500)
-            {
-                img[(row * width + col) * 4 + 0] = 255;
-                img[(row * width + col) * 4 + 1] = 127;
-                img[(row * width + col) * 4 + 2] =   0;
-                img[(row * width + col) * 4 + 3] = 255;
-            }
-            else
-            {
-                img[(row * width + col) * 4 + 0] = std::min<int>(255, (1.0 * 22500.0 / r2) * 255);
-                img[(row * width + col) * 4 + 1] = std::min<int>(255, (0.5 * 22500.0 / r2) * 255);
-                img[(row * width + col) * 4 + 2] = std::min<int>(255, (0.0 * 22500.0 / r2) * 255);
-                img[(row * width + col) * 4 + 3] = std::min<int>(255, std::max<int>(0.0, 255 * (22500.0 / (float)r2 - 22500.0 / 202500.0)));
-            }
+			// Distance of pixel to center
+			float distance = sqrt(pow(width / 2 - col, 2) + pow(height / 2 - row, 2));
+            img[(row * width + col) * 4 + 0] = 255; // R
+            img[(row * width + col) * 4 + 1] = 150; // G
+            img[(row * width + col) * 4 + 2] = 0; // B
+			float dist_norm = fmax((distance - width / 8.f) / (width / 4.f - width / 8.f), 0);
+			float alpha = fmax(fmin(1 / (2.f * dist_norm) - 0.5f, 1), 0);
+            img[(row * width + col) * 4 + 3] = alpha * 255; // A
         }
     }
 

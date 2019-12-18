@@ -29,15 +29,21 @@
 
 //=============================================================================
 
+#define glCheckError() __glCheckError(__FILE__,__LINE__)
 
 /// Check for OpenGL errors.
-inline void glCheckError()
+inline void __glCheckError(const char *file, int line)
 {
     GLenum error;
+    int num_errors = 0;
 
     do
     {
         error = glGetError();
+        if (error != GL_NO_ERROR) {
+            std::cerr << "GL error at " << file << ":" << line << ", :";
+            ++num_errors;
+        }
 
         switch (error)
         {
@@ -68,9 +74,15 @@ inline void glCheckError()
             case GL_STACK_OVERFLOW:
                 std::cerr << " GL error: stack overflow\n";
                 break;
+            case GL_NO_ERROR:
+                break;
+            default:
+                std::cerr << "unknown enum" << std::endl;
         }
+        std::cerr << std::flush;
     }
     while (error != GL_NO_ERROR);
+    if(num_errors) std::abort();
 }
 
 

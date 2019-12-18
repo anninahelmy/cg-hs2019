@@ -46,12 +46,10 @@ void Sphere::initialize()
     const unsigned int n_vertices   = (v_resolution) * u_resolution;
     const unsigned int n_triangles  = 2 * (v_resolution-1) * (u_resolution-1);
 
-    std::vector<GLfloat>  positions(3*n_vertices);
-    std::vector<GLfloat>    normals(3*n_vertices);
-    std::vector<GLfloat>  texcoords(2*n_vertices);
-    std::vector<GLfloat>   tangents(3*n_vertices);
-    std::vector<GLfloat> bitangents(3*n_vertices);
-    std::vector<GLuint >    indices(3*n_triangles);
+    std::vector<GLfloat> positions(3*n_vertices);
+    std::vector<GLfloat>   normals(3*n_vertices);
+    std::vector<GLfloat> texcoords(2*n_vertices);
+    std::vector<GLuint >   indices(3*n_triangles);
 
     unsigned int p(0), n(0), t(0), i(0), tan(0), bitan(0);
 
@@ -80,16 +78,6 @@ void Sphere::initialize()
 
             texcoords[t++] = 1.0-u;
             texcoords[t++] = 1.0-v;
-
-            // tangent: normalized(- d pos / d theta)
-            tangents[tan++] = z; // sin(phi) * -sin(theta);
-            tangents[tan++] = 0;
-            tangents[tan++] = -x; // sin(phi) * cos(theta)
-
-            // bitangent: normalized(- d pos / d phi)
-            bitangents[bitan++] = - cos(theta) * cos(phi);
-            bitangents[bitan++] = sin(phi);
-            bitangents[bitan++] = - sin(theta) * cos(phi);
         }
     }
 
@@ -141,20 +129,6 @@ void Sphere::initialize()
     glBufferData(GL_ARRAY_BUFFER, 2*n_vertices*sizeof(float), &texcoords[0], GL_STATIC_DRAW);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(2);
-
-    // tangent vectors -> attribute 3
-    glGenBuffers(1, &tan_bo_);
-    glBindBuffer(GL_ARRAY_BUFFER, tan_bo_);
-    glBufferData(GL_ARRAY_BUFFER, 3*n_vertices*sizeof(float), &tangents[0], GL_STATIC_DRAW);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(3);
-
-    // bitangent vectors -> attribute 4
-    glGenBuffers(1, &bitan_bo_);
-    glBindBuffer(GL_ARRAY_BUFFER, bitan_bo_);
-    glBufferData(GL_ARRAY_BUFFER, 3*n_vertices*sizeof(float), &bitangents[0], GL_STATIC_DRAW);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(4);
 
     // triangle indices
     glGenBuffers(1, &ibo_);
