@@ -77,8 +77,11 @@ vec3 PiecewiseBezier::operator()(float t) const {
 }
 
 vec3 PiecewiseBezier::tangent(float t) const {
+	if (t == 1) return eval_bezier(3 * (num_segments() - 1), 1.f);
 
-	return eval_bezier_tangent(0, t);
+	float t_ = t * num_segments();
+	int segment_index = floor(t_);
+	return eval_bezier_tangent(3 * segment_index, t_ - float(segment_index));
 }
 
 void PiecewiseBezier::set_control_polygon(const std::vector<vec3>& control_polygon, bool loop) {

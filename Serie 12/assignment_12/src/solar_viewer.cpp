@@ -230,10 +230,8 @@ void Solar_viewer::timer()
 
 		ship_.update_ship();
 
-		// Desired ship speed (in units of Euclidean distance per animation
-		// frame, not curve parameter distance). This is the (constant)
-		// Euclidean step length we want the ship to make during each time step.
-		const float ship_speed = 0.001;
+		
+		const float ship_speed = 0.01;
 		/** \todo
 		 * Assignment 11, Task 5
 		 * Advance the curve evaluation parameter "ship_path_param_"
@@ -374,14 +372,9 @@ void Solar_viewer::paint()
 		up = mat4(ship_path_frame_.xyzToFrame()) * rotation * vec4(0, 1, 0, 0);
 	}
 
-	//TODO: Fix???
-	x_rotation = x_angle_;
-	y_rotation = y_angle_;
-	
-	
-	
-	billboard_x_angle_ = x_rotation;
-	billboard_y_angle_ = y_rotation;
+	vec3 normalForBillboard = normalize(vec3(eye) - vec3(sun_.pos_));
+	billboard_x_angle_ = asin(-normalForBillboard.y) * (180 / M_PI);
+	billboard_y_angle_ = atan2(normalForBillboard.x, normalForBillboard.z) * (180 / M_PI);
 
 	mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
 
