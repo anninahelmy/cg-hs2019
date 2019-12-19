@@ -41,6 +41,7 @@ std::vector<vec3> PiecewiseBezier::control_polygon_to_bezier_points(std::vector<
 	std::vector<vec3> bezier_pts;
 	size_t numSegments = cp.size() - 3;
 
+	//Debugging
 	std::cout << numSegments << "segments\n";
 
 	for (auto&& p : bezier_pts) {
@@ -57,6 +58,7 @@ std::vector<vec3> PiecewiseBezier::control_polygon_to_bezier_points(std::vector<
 		if (i != cp.size() - 2) bezier_pts.emplace_back(next_1_third);
 	}
 
+	//Debugging
 	for (auto&& p : bezier_pts) {
 		std::cout << p.x << ", " << p.y << ", " << p.z << "\n";
 	}
