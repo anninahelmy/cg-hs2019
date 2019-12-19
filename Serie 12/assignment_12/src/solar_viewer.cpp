@@ -48,7 +48,7 @@ Solar_viewer::Solar_viewer(const char* _title, int _width, int _height)
 	// rendering parameters
 	greyscale_ = false;
 	fovy_ = 45;
-	near_ = 0.01f;
+	near_ = 0.001f;
 	far_ = 20;
 
 	// viewing angle
